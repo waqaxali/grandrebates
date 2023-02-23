@@ -69,21 +69,7 @@
                         </thead>
                         <tbody>
                             @foreach ($stores as $store)
-                                <?php
-                                //calculate cashback
-                                $cashback = 0;
 
-                                if ($store->use_network == config('constants.stores.use_network') && $store->cashback_commission == config('constants.stores.commission') && $store->network_flat_switch == config('constants.stores.network_flat_switch_active')) {
-                                    $cashback = $store->network_flat_rate;
-                                } elseif ($store->use_network == config('constants.stores.use_network') && $store->cashback_commission == config('constants.stores.commission') && $store->network_flat_switch == config('constants.stores.network_flat_switch_dactive')) {
-                                    $cashback = cashback($store->network_cashback);
-                                } elseif ($store->use_skimlinks == config('constants.stores.use_skimlinks') && $store->cashback_commission == config('constants.stores.commission') && $store->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_active')) {
-                                    $cashback = $store->skimlinks_min;
-                                } elseif ($store->use_skimlinks == config('constants.stores.use_skimlinks') && $store->cashback_commission == config('constants.stores.commission') && $store->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_dactive')) {
-                                    $cashback = cashback($store->skimlinks_min);
-                                } else {
-                                }
-                                ?>
                                 <tr>
                                     <td>
                                         <a class="flex-row" href="{{ route('codes', $store->id) }}">
@@ -94,7 +80,7 @@
                                         </a>
                                     </td>
 
-                                    <td> {{ $cashback }} %</td>
+                                    <td> {{ cashback_calculate($store) }} %</td>
                                     <td>
                                         -
                                     </td>

@@ -80,17 +80,12 @@
                         </div>
                     </form>
                     <!--/form row-->
-                    <div class="row mt-4">
+                    <div class="row mt-4 mb-2">
                         <div class="col-md-2">
                             <a href="{{ route('add_offer') }}" class="form-control  btn btn-success" value=""><b>Add
                                     New Offer</b></a>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group row">
-                                <label for="inputSkills" class="ccol-sm-8 col-form-label">⚠️ {{ count($all_offers) }}
-                                    offers</label>
-                            </div>
-                        </div>
+
                     </div>
                 @else
                     <div class="row mt-4 ">
@@ -180,7 +175,7 @@
                                 <td>{{ $offer->title }}</td>
                                 <td>{{ $offer->code }}</td>
                                 <td>{{ $offer->end_date }}</td>
-                                @if ($date<=$offer->end_date)
+                                @if (get_date()->toDateString()<=$offer->end_date)
                                 <td>Active</td>
                                 @else
                                 <td>Expired</td>

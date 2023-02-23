@@ -14,37 +14,7 @@
                     </nav> --}}
 
 
-                    <?php
-//calculate cashback
-$cashback=0;
 
-if ($feature->stores->use_network == config('constants.stores.use_network') && $feature->stores->cashback_commission == config('constants.stores.commission') &&  $feature->stores->network_flat_switch == config('constants.stores.network_flat_switch_active'))
-{
-    $cashback=$feature->stores->network_flat_rate;
-
-}
-elseif ($feature->stores->use_network == config('constants.stores.use_network') && $feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->network_flat_switch == config('constants.stores.network_flat_switch_dactive'))
-{
-    $cashback=cashback($feature->stores->network_cashback);
-
-}
-
-elseif( $feature->stores->use_skimlinks == config('constants.stores.use_skimlinks') &&$feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_active')){
-    $cashback=$feature->stores->skimlinks_min;
-
-}
-elseif( $feature->stores->use_skimlinks == config('constants.stores.use_skimlinks') &&$feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_dactive')){
-    $cashback=cashback($feature->stores->skimlinks_min);
-
-}
-
- else{
-
-
-}
-
-
-?>
 
                     <header class="store-header">
                         <div class="left">
@@ -57,13 +27,13 @@ elseif( $feature->stores->use_skimlinks == config('constants.stores.use_skimlink
                             <div class="right">
                                 <h1>{{ $feature->title }} Coupons &amp; Promo Codes</h1>
                                 <div class="stats">
-                                    @if($cashback !='0')
+                                    @if(cashback_calculate($feature->stores) !='0')
                                     <span class="stats-badge">
                                         <span class="hide-on-small">
                                             Coupons for
                                         </span>
 
-                                        {{ $cashback }}% Cash Back
+                                        {{ cashback_calculate($feature->stores) }}% Cash Back
 
 
                                     </span>
@@ -140,7 +110,7 @@ elseif( $feature->stores->use_skimlinks == config('constants.stores.use_skimlink
                                             </span>
 
                                         </h6>
-                                        <p>{{ $feature->stores->custom_cashback_title }}  with an extra {{$cashback}}% in cash back.<br>
+                                        <p>{{ $feature->stores->custom_cashback_title }}  with an extra {{cashback_calculate($feature->stores)}}% in cash back.<br>
 
                                     </div>
 
@@ -505,7 +475,7 @@ elseif( $feature->stores->use_skimlinks == config('constants.stores.use_skimlink
                                     {{$feature->stores->description_about_section}}<br><br>
                                     @endif
 
-                                    @if ($feature->stores->show_store_description==null)
+                                    @if ($feature->stores->show_store_description==null || $feature->stores->description_about_section=='')
                                         <p>Whether you are looking for the most up to date {{ $feature->title }} promo
                                             codes, you came to
                                             the right place. Here at Grandrebates.com we work tirelessly to look for most up to

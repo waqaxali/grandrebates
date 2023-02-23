@@ -102,9 +102,7 @@ class categorycontroller extends Controller
     }
     public function delete_category($id)
     {
-        $success = $this->category::where('id', $id)->update([
-            'is_active' => 2,
-        ]);
+        $success = $this->category::where('id', $id)->delete();
         if ($success == true) {
 
             return redirect()->route('all_category');
@@ -120,7 +118,7 @@ class categorycontroller extends Controller
 
         $stores = $this->store::whereHas('categories', function ($query) use ($id) {
             $query->where('id', $id);
-        })->where('status',config('constants.status.is_active'))->where('is_active',config('constants.is_active'))->get();
+        })->where('status',config('constants.status.is_active'))->get();
 
 //         $count_category_offers = $this->category::select('id')->with('deployments')->get();
 // dd($count_category_offers);
@@ -130,7 +128,7 @@ class categorycontroller extends Controller
 
     public function track_store_category_ajaxcall(Request $request)
     {
-        $all_category = $this->category::with('offers')->where('slug', $request->slug)->where('is_active', 1)->get();
+        $all_category = $this->category::with('offers')->where('slug', $request->slug)->get();
         return response()->json(['categories' => json_encode($all_category)]);
     }
 }

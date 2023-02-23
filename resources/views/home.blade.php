@@ -47,30 +47,17 @@
                 <h3 class="col-md-12 p-0 mb-3">Featured Stores</h3>
                 <div class="row">
                     @foreach ($home_feature_store as $feature)
-                        <?php
-                        //calculate cashback
-                        $cashback = 0;
-
-                        if ($feature->stores->use_network == config('constants.stores.use_network') && $feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->network_flat_switch == config('constants.stores.network_flat_switch_active')) {
-                            $cashback = $feature->stores->network_flat_rate;
-                        } elseif ($feature->stores->use_network == config('constants.stores.use_network') && $feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->network_flat_switch == config('constants.stores.network_flat_switch_dactive')) {
-                            $cashback = cashback($feature->stores->network_cashback);
-                        } elseif ($feature->stores->use_skimlinks == config('constants.stores.use_skimlinks') && $feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_active')) {
-                            $cashback = $feature->stores->skimlinks_min;
-                        } elseif ($feature->stores->use_skimlinks == config('constants.stores.use_skimlinks') && $feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_dactive')) {
-                            $cashback = cashback($feature->stores->skimlinks_min);
-                        } else {
-                        }
-                        ?>
+                        @if($feature->stores->status==config('constants.status.is_active'))
                         <div class="col-md-4">
                             <a href="{{ route('view_codes', [$feature->id, 'feature_store']) }}">
                                 <img class="img-fluid" src="{{ asset('images/' . $feature->image) }}" alt="Photo">
                                 <h4 class="text-lg mt-2 mb-1">{{ $feature->title }}</h4>
 
-                                <p>{{ $cashback }}% commission &amp; cash back</p>
+                                <p>{{cashback_calculate($feature->stores) }}% commission &amp; cash back</p>
 
                             </a>
                         </div>
+                        @endif
                     @endforeach
 
                 </div>
@@ -81,28 +68,15 @@
                 <div class="row">
 
                     @foreach ($home_feature_deal as $feature_deal)
-                        <?php
-                        //calculate cashback
-                        $cashback = 0;
-
-                        if ($feature_deal->stores->use_network == config('constants.stores.use_network') && $feature_deal->stores->cashback_commission == config('constants.stores.commission') && $feature_deal->stores->network_flat_switch == config('constants.stores.network_flat_switch_active')) {
-                            $cashback = $feature_deal->stores->network_flat_rate;
-                        } elseif ($feature_deal->stores->use_network == config('constants.stores.use_network') && $feature_deal->stores->cashback_commission == config('constants.stores.commission') && $feature_deal->stores->network_flat_switch == config('constants.stores.network_flat_switch_dactive')) {
-                            $cashback = cashback($feature_deal->stores->network_cashback);
-                        } elseif ($feature_deal->stores->use_skimlinks == config('constants.stores.use_skimlinks') && $feature_deal->stores->cashback_commission == config('constants.stores.commission') && $feature_deal->stores->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_active')) {
-                            $cashback = $feature_deal->stores->skimlinks_min;
-                        } elseif ($feature_deal->stores->use_skimlinks == config('constants.stores.use_skimlinks') && $feature_deal->stores->cashback_commission == config('constants.stores.commission') && $feature_deal->stores->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_dactive')) {
-                            $cashback = cashback($feature_deal->stores->skimlinks_min);
-                        } else {
-                        }
-                        ?>
+                    @if($feature_deal->stores->status==config('constants.status.is_active'))
                         <div class="col-md-3">
                             <a href="{{ route('view_codes', [$feature_deal->id, 'feature_deal']) }}">
                                 <img class="img-fluid" src="{{ asset('images/' . $feature_deal->image) }}" alt="Photo">
                                 <h4 class="text-lg mt-2 mb-1">{{ $feature_deal->title }}</h4>
-                                <p>{{ $cashback }}% commission &amp; cash back</p>
+                                <p>{{ cashback_calculate($feature_deal->stores)}}% commission &amp; cash back</p>
                             </a>
                         </div>
+                        @endif
                     @endforeach
 
 

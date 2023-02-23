@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->nullable();
             $table->string('store_name');
-            $table->tinyInteger('network_type')->default(1)-nullable(); //1:Network, 2:Skimlink, 3: VGlinks
+            $table->tinyInteger('network_type')->default(1); //1:Network, 2:Skimlink, 3: VGlinks
         //    $table->Integer('use_network')->nullable();
         //     $table->Integer('use_skimlinks')->nullable();
         //     $table->Integer('use_viglink')->nullable();
@@ -43,8 +43,8 @@ return new class extends Migration
             $table->string('custom_commission_subtitle')->nullable();
             $table->string('logo')->nullable();
             $table->string('featured_image')->nullable();
-            $table->tinyInteger('show_serp')->default(0)->nullable();
-            $table->tinyInteger('scrap_promocodes')->default(0)->nullable();
+            $table->tinyInteger('show_serp')->default(0);
+            $table->tinyInteger('scrap_promocodes')->default(0);
             $table->tinyInteger('show_amazon')->default(0)->nullable();
 
             $table->string('instagram_url')->nullable();

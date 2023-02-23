@@ -12,12 +12,16 @@ return [
     ],
 
     'stores' => [
-        'use_network' => 1,
-        'use_skimlinks' => 1,
+        // 'use_network' => 1,
+        // 'use_skimlinks' => 1,
         'commission' => 1,
         'network_flat_switch_active' => 1,
         'network_flat_switch_dactive' => 0,
         'skimlinks_flat_rate_active' => 1,
         'skimlinks_flat_rate_dactive' => 0,
+    ],
+    'network_type' => [
+        'network' => 1,
+        'skimlinks' => 2,
     ],
 ];

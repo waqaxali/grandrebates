@@ -54,9 +54,8 @@ class countrycontroller extends Controller
     }
     public  function delete_country(Request $request,$slug)
     {
-        $update= $this->country::where('slug',$slug)->first();
-        $update->is_active=2;
-        $success=$update->update();
+        $success= $this->country::where('slug',$slug)->delete();
+
         if( $success==true){
             toast('Successfully deleted!','success')->timerProgressBar()->width('400px');
             return redirect()->route('countries');

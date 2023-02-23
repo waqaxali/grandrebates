@@ -91,10 +91,10 @@
 
 
                 <div class="row">
-                    <div class="col-md-8 offset-md-2 mt-4 mb-4">
+                    <div class="col-md-8 offset-md-2 mt-4 ">
                         <form action="simple-results.html">
                             <div class="input-group">
-                                <input type="search" class="form-control form-control-lg"
+                                <input type="search" id="search" class="form-control form-control-lg"
                                     placeholder="Search or paste a product link">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-lg btn-default">
@@ -104,21 +104,32 @@
                             </div>
                         </form>
                     </div>
+                    <div class="col-md-8 offset-md-2 mb-4">
+
+                        <div class="search-input-suggestions form-control form-control-lg d-none"  style="width:92%">
+                          <ul class="searchContainer">
+
+                          </ul>
+                        </div>
+
+                </div>
                 </div>
                 <form action="{{ route('search_store') }}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-md-3 mb-2">
-
+                            <label for="">Monetization</label>
                             <select class="form-control select2" name="network_type" id="monetization" style="width: 100%;">
-                                <option {{($request->network_type=='')? 'selected' : ''}} selected="selected" value="">Monetization : All</option>
-                                <option {{($request->network_type==1)? 'selected' : ''}} value="1">Network</option>
-                                <option {{($request->network_type==2)? 'selected' : ''}} value="2">Skimlinks</option>
+                                <option {{ $request->network_type == '' ? 'selected' : '' }} selected="selected"
+                                    value="">Monetization : All</option>
+                                <option {{ $request->network_type == 1 ? 'selected' : '' }} value="1">Network</option>
+                                <option {{ $request->network_type == 2 ? 'selected' : '' }} value="2">Skimlinks</option>
                             </select>
 
                         </div>
                         <!--/col-->
                         <div class="col-md-3 mb-2">
+                            <label for="">Networks</label>
                             <select class="form-control select2" name="network_id" id="network_id" style="width: 100%;">
                                 {!! all_network_options($network_selected_id) !!}
 
@@ -127,18 +138,20 @@
                         </div>
                         <!--/col-->
                         <div class="col-md-3 mb-2">
+                            <label for="">Status</label>
                             <select class="form-control select2" name="status" id="status" style="width: 100%;">
 
-                                <option {{($request->status=='')? 'selected' : ''}}  value="">Status: All</option>
-                                <option {{($request->status=='1')? 'selected' : ''}} value="1">Active</option>
-                                <option {{($request->status=='0')? 'selected' : ''}} value="0">Deactive(pause)</option>
+                                <option {{ $request->status == '' ? 'selected' : '' }} value="">Status: All</option>
+                                <option {{ $request->status == '1' ? 'selected' : '' }} value="1">Active</option>
+                                <option {{ $request->status == '0' ? 'selected' : '' }} value="0">Deactive(pause)
+                                </option>
 
                             </select>
 
                         </div>
                         <!--/col-->
-                        <div class="col-md-3 mb-2">
-                            <button class="form-control btn btn-success" style="width: 100%;">
+                        <div class="col-md-3 mb-2 ">
+                            <button class="form-control btn btn-success" style="width: 100%;    margin-top: 31px;">
                                 Search
 
                                 </select>
@@ -177,10 +190,14 @@
                             <label>Missing Data</label>
                             <select class="form-control  select2" id="missing_data" name="missing_data"
                                 style="width: 100%;">
-                                <option {{($request->missing_data=='')? 'selected' : ''}} selected="selected" value="">Select Option   </option>
-                                <option {{($request->missing_data=='affliated_url')? 'selected' : ''}} value="affliated_url">affiliate_url_missing</option>
-                                <option {{($request->missing_data=='logo')? 'selected' : ''}} value="logo ">logo_missing</option>
-                                <option {{($request->missing_data=='homepage_url')? 'selected' : ''}} value="homepage_url">direct_url_missing</option>
+                                <option {{ $request->missing_data == '' ? 'selected' : '' }} selected="selected"
+                                    value="">Select Option </option>
+                                <option {{ $request->missing_data == 'affliated_url' ? 'selected' : '' }}
+                                    value="affliated_url">affiliate_url_missing</option>
+                                <option {{ $request->missing_data == 'logo' ? 'selected' : '' }} value="logo ">logo_missing
+                                </option>
+                                <option {{ $request->missing_data == 'homepage_url' ? 'selected' : '' }}
+                                    value="homepage_url">direct_url_missing</option>
 
 
                             </select>
@@ -201,44 +218,46 @@
                 <div class="row mt-3 mb-3">
 
                     <div class="col-md-2">
-                        <a href="{{ route('add_store') }}" class="form-control  btn btn-outline-secondary" value=""><b>Add store</b></a>
+                        <a href="{{ route('add_store') }}" class="form-control  btn btn-outline-secondary"
+                            value=""><b>Add store</b></a>
 
                     </div>
                     <div class="col-md-2">
-                        <a href="{{ route('all_category') }}" class="form-control  btn btn-outline-secondary" value=""><b>Store categories</b></a>
+                        <a href="{{ route('all_category') }}" class="form-control  btn btn-outline-secondary"
+                            value=""><b>Store categories</b></a>
 
                     </div>
                     <div class="col-md-1">
-@if(isset( $change_excel_button_route))
-<form action="{{route('all_store')}}" method="get">
-    @csrf
+                        @if (isset($change_excel_button_route))
+                            <form action="{{ route('all_store') }}" method="get">
+                                @csrf
 
-    <input type="hidden" name="hidden_excel_export" value="hidden_excel_export">
-<input type="submit" value="Excel"  class="form-control  btn btn-outline-secondary" value="">
-</form>
-
-@else
-<form action="{{route('search_store')}}" method="post">
-    @csrf
-    <input type="hidden" name="monotization" value="{{$request->monotization}}">
-    <input type="hidden" name="status" value="{{$request->status}}">
-    <input type="hidden" name="network_id" value="{{$request->network_id}}">
-    <input type="hidden" name="missing_data" value="{{$request->missing_data}}">
-    <input type="hidden" name="hidden_excel_export" value="hidden_excel_export">
-<input type="submit" value="Excel"  class="form-control  btn btn-outline-secondary" value="">
-</form>
-
-@endif
+                                <input type="hidden" name="hidden_excel_export" value="hidden_excel_export">
+                                <input type="submit" value="Excel" class="form-control  btn btn-outline-secondary"
+                                    value="">
+                            </form>
+                        @else
+                            <form action="{{ route('search_store') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="monotization" value="{{ $request->monotization }}">
+                                <input type="hidden" name="status" value="{{ $request->status }}">
+                                <input type="hidden" name="network_id" value="{{ $request->network_id }}">
+                                <input type="hidden" name="missing_data" value="{{ $request->missing_data }}">
+                                <input type="hidden" name="hidden_excel_export" value="hidden_excel_export">
+                                <input type="submit" value="Excel" class="form-control  btn btn-outline-secondary"
+                                    value="">
+                            </form>
+                        @endif
 
                     </div>
-                    <div class="col-md-2">
+                    {{-- <div class="col-md-2">
                         <a href="{{ route('to_skimlinks') }}" class="form-control  btn btn-outline-secondary" value=""><b>Move to skimlinks</b></a>
 
                     </div>
                     <div class="col-md-2">
                         <a href="{{ route('to_networks') }}" class="form-control  btn btn-outline-secondary" value=""><b>Move to networks</b></a>
 
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="stores_table mb-4">
@@ -271,21 +290,7 @@
                         <tbody id="hide_all_stores">
 
                             @forelse($all_store as $store)
-                                <?php
-                                //calculate cashback
-                                $cashback = 0;
-
-                                if ($store->use_network == config('constants.stores.use_network') && $store->cashback_commission == config('constants.stores.commission') && $store->network_flat_switch == config('constants.stores.network_flat_switch_active')) {
-                                    $cashback = $store->network_flat_rate;
-                                } elseif ($store->use_network == config('constants.stores.use_network') && $store->cashback_commission == config('constants.stores.commission') && $store->network_flat_switch == config('constants.stores.network_flat_switch_dactive')) {
-                                    $cashback = cashback($store->network_cashback);
-                                } elseif ($store->use_skimlinks == config('constants.stores.use_skimlinks') && $store->cashback_commission == config('constants.stores.commission') && $store->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_active')) {
-                                    $cashback = $store->skimlinks_min;
-                                } elseif ($store->use_skimlinks == config('constants.stores.use_skimlinks') && $store->cashback_commission == config('constants.stores.commission') && $store->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_dactive')) {
-                                    $cashback = cashback($store->skimlinks_min);
-                                } else {
-                                }
-                                ?>
+                               
                                 <tr>
                                     <td>{{ $store->networks->name }}</td>
                                     <td>{{ $store->store_name }}</td>
@@ -301,8 +306,10 @@
                                     <td>
                                         <ul class="list-inline">
                                             <li class="list-inline-item">
-                                                <img alt="Avatar" class="table-avatar"
-                                                    src="{{ asset('images/' . $store->featured_image) }}">
+                                                @if (isset($store->featured_image))
+                                                <img alt="Avatar" class="table-avatar" src="{{ asset('images/' . $store->featured_image) }}">
+                                                @endif
+
                                             </li>
 
                                         </ul>
@@ -312,7 +319,7 @@
                                     {{-- <td>-</td> --}}
                                     {{-- <td>-</td> --}}
 
-                                        <td>{{$cashback}} %</td>
+                                    <td>{{ cashback_calculate($store) }} %</td>
 
                                     <td>{{ $store->country_id }}</td>
 
@@ -323,8 +330,9 @@
                                     @else
                                         <td>Deactive(Pause)</td>
                                     @endif
+
                                     <td>
-                                        <span class="badge bg-primary "> {{ count($store->offers) }}</span>
+                                        <span class="badge bg-primary "> {{ count_offers($store->id) }}</span>
                                         <a class="btn  btn-sm btn-success mb-1" style="width:100px;"
                                             href="{{ route('all_offers', $store->slug) }}">
 
@@ -399,4 +407,50 @@
                     });
             });
         </script>
+        <script>
+    function count(array) {
+
+        var c = 0;
+        for (i in array)
+            if (array[i] != undefined)
+                c++;
+
+        return c;
+    }
+    $('#search').on('keyup', function() {
+        $('.search-input-suggestions').addClass('d-none');
+                $('.search-input-suggestions').removeClass('d-table');
+        var store_name = $(this).val();
+        var ul = ''
+        $(".searchContainer").html('');
+        $.ajax({
+            url: "{{ route('autocomplete_search') }}",
+            type: "post",
+            data: {
+                'store_name': store_name,
+                '_token': '{{ csrf_token() }}',
+
+            },
+
+            success: function(res) {
+                $('.search-input-suggestions').removeClass('d-none');
+                $('.search-input-suggestions').addClass('d-table');
+                var stores = eval(res.stores);
+
+                var cashback = 0;
+                $.each(stores, function(key, value) {
+                    var total_offers = count(value.offers);
+
+                                        ul+='<li><a href="{{route('codes')}}/'+value.id+'" id="store_id_'+value.id+'" class="d-block">';
+                                            ul+='<span class="search_logo" "><img src="images/'+value.logo+'" style="width:80px;height:53px"> </span>';
+                                            ul+=' <div class="search_right"><h5>'+value.store_name+'</h5><p>'+total_offers+' Coupons &amp; Deals</p></div>';
+                                            ul+='</a></li>';
+
+                });
+                $('.searchContainer').append(ul);
+            }
+        });
+
+    });
+</script>
     @endsection

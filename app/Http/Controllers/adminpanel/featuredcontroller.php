@@ -45,9 +45,7 @@ class featuredcontroller extends Controller
         if ($request->location == 'Home-Page-Top-Deals') {
             $this->featured->featuredable_type = 'deal';
         }
-        if ($request->location == 'Home-Page-Slider') {
-            $this->featured->featuredable_type = 'slider';
-        }
+      
 
         $this->featured->location = $request->location;
         $this->featured->featureable_item_id = $request->featureable_item_id ? $request->featureable_item_id : '';
@@ -122,7 +120,7 @@ class featuredcontroller extends Controller
     public function ajaxcall(Request $request)
     {
         if ($request->select_type == 'Home-Page-Featured-Store') {
-            $data = $this->store::select('id','store_name')->orderBy('id', 'desc')->where('is_active', config('constants.is_active'))->where('status',config('constants.status.is_active'))->get();
+            $data = $this->store::select('id','store_name')->orderBy('id', 'desc')->where('status',config('constants.status.is_active'))->get();
             return response()->json($data);
         }
        if ($request->select_type == 'Home-Page-Featured-Category') {
@@ -130,13 +128,13 @@ class featuredcontroller extends Controller
             return response()->json($data);
        }
         if ($request->select_type == 'Home-Page-Top-Deals') {
-            $data = $this->store::select('id','store_name')->orderBy('id', 'desc')->where('is_active', 1)->where('status',config('constants.status.is_active'))->get();
+            $data = $this->store::select('id','store_name')->orderBy('id', 'desc')->where('status',config('constants.status.is_active'))->get();
             return response()->json($data);
         }
 
         if ($request->select_type == 'Home-Page-Slider') {
 
-            $data = $this->store::select('id','store_name')->orderBy('id', 'desc')->where('is_active', 1)->where('status',config('constants.status.is_active'))->get();
+            $data = $this->store::select('id','store_name')->orderBy('id', 'desc')->where('status',config('constants.status.is_active'))->get();
 
             return response()->json($data);
         }
@@ -149,9 +147,7 @@ class featuredcontroller extends Controller
     {
 
 
-        $success = $this->featured::find($id)->update([
-            'is_active' => 2,
-        ]);
+        $success = $this->featured::find($id)->delete();
         if ($success == true) {
             toast('Successfully deleted!', 'success')->timerProgressBar()->width('400px');
             return redirect()->route('all_featured');

@@ -40,8 +40,7 @@ class usercontroller extends Controller
 
         }
         if ($type == 'category') {
-            $store = $this->store::find($id); ///with offers find data
-            $offers = $this->offers::where('store_id', $store->id)->get();
+
             // $stores = $this->store::with('features')->get();
             // $stores = $this->store::whereHas('features', function ($query) use ($id) {
             //     $query->where('id', $id);
@@ -168,9 +167,9 @@ class usercontroller extends Controller
     }
     public function welcome()
     {
-        $welcome_category = Feature::where('location', 'welcome_page_category')->orderBy('id', 'desc')->get();
-        $welcome_store = Feature::where('location', 'welcome_page_store')->orderBy('id', 'desc')->get();
-        $welcome_deal = Feature::where('location', 'welcome_page_deal')->orderBy('id', 'desc')->take(4)->get();
+        // $welcome_category = Feature::where('location', 'welcome_page_category')->orderBy('id', 'desc')->get();
+        // $welcome_store = Feature::where('location', 'welcome_page_store')->orderBy('id', 'desc')->get();
+        // $welcome_deal = Feature::where('location', 'welcome_page_deal')->orderBy('id', 'desc')->take(4)->get();
 
         return view('welcome', compact('welcome_category', 'welcome_store', 'welcome_deal'));
     }

@@ -30,7 +30,7 @@
                             <option value="Home-Page-Featured-Store"><strong>Home Page Featured Store</strong></option>
                             <option value="Home-Page-Featured-Category">Home Page Featured Category</option>
                             <option value="Home-Page-Top-Deals">Home Page Top Deals</option>
-                            <option value="Home-Page-Slider">Home Page Slider</option>
+
                         </select>
                     </div>
 

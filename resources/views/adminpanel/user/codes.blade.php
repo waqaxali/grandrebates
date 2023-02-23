@@ -12,21 +12,7 @@
                         <a href="/categories/travel-coupons?locale=uk">Travel</a>
                         <span class="active">{{ $store->store_name }} </span>
                     </nav> --}}
-                    <?php
-                    //calculate cashback
-                    $cashback = 0;
 
-                    if ($store->use_network == config('constants.stores.use_network') && $store->cashback_commission == config('constants.stores.commission') && $store->network_flat_switch == config('constants.stores.network_flat_switch_active')) {
-                        $cashback = $store->network_flat_rate;
-                    } elseif ($store->use_network == config('constants.stores.use_network') && $store->cashback_commission == config('constants.stores.commission') && $store->network_flat_switch == config('constants.stores.network_flat_switch_dactive')) {
-                        $cashback = cashback($store->network_cashback);
-                    } elseif ($store->use_skimlinks == config('constants.stores.use_skimlinks') && $store->cashback_commission == config('constants.stores.commission') && $store->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_active')) {
-                        $cashback = $store->skimlinks_min;
-                    } elseif ($store->use_skimlinks == config('constants.stores.use_skimlinks') && $store->cashback_commission == config('constants.stores.commission') && $store->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_dactive')) {
-                        $cashback = cashback($store->skimlinks_min);
-                    } else {
-                    }
-                    ?>
                     <header class="store-header">
                         <div class="left">
                             <div class="left">
@@ -38,13 +24,13 @@
                             <div class="right">
                                 <h1>{{ $store->store_name }} Coupons &amp; Promo Codes</h1>
                                 <div class="stats">
-                                    @if ($cashback != '0')
+                                    @if (cashback_calculate($store) != '0')
                                         <span class="stats-badge">
                                             <span class="hide-on-small">
                                                 Coupons for
                                             </span>
 
-                                            {{ $cashback }}% Cash Back
+                                            {{ cashback_calculate($store) }}% Cash Back
 
 
                                         </span>
@@ -125,7 +111,7 @@
                                             </span>
 
                                         </h6>
-                                        <p>{{ $store->custom_cashback_title }} with an extra {{ $cashback }}% in cash
+                                        <p>{{ $store->custom_cashback_title }} with an extra {{ cashback_calculate($store) }}% in cash
                                             back.<br>
 
                                         </p>
@@ -193,11 +179,11 @@
                             $link = $store->affliated_url;
                         }
                         ?>
-
+{{-- {{dd(get_date()->toDateString());}} --}}
                         <section class="offer-stripes" data-has-more="content-list-item" data-show-count="6">
                             <?php $count = 0; ?>
                             @foreach ($offers as $offer)
-                            @if($date<=$offer->end_date)
+                            @if(get_date()->toDateString()<=$offer->end_date)
 
 
 

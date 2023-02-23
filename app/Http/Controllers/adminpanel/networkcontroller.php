@@ -12,7 +12,7 @@ class networkcontroller extends Controller
         $this->network= new Network;
     }
     public function networks(){
-       $networks= $this->network::where('is_active',1)->orderBy('id','DESC')->paginate(config('constants.per_page'));
+       $networks= $this->network::orderBy('id','DESC')->paginate(config('constants.per_page'));
         return view('adminpanel.network.network',compact('networks'));
     }
 
@@ -56,9 +56,7 @@ class networkcontroller extends Controller
     }
     public  function delete_network(Request $request,$slug)
     {
-        $update= $this->network::where('slug',$slug)->first();
-        $update->is_active=2;
-        $success=$update->update();
+        $success= $this->network::where('slug',$slug)->delete();
         if( $success==true){
 
 

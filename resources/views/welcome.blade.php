@@ -115,6 +115,7 @@
                 {{-- style tag will have to remove after testing --}}
                 <div class="cat-wrapper featured_categories_slider" style="display: block">
                     @foreach ($home_feature_category as $category)
+                    
                         <div class="cat-col">
                             <a href="{{ route('categories', $category->featureable_item_id) }}">
                                 <img src="{{ asset('images/' . $category->image) }}" class="cal_logos">
@@ -143,21 +144,8 @@
 
                     <div class="slider homepage-slider slides-to-show-5">
                         @foreach ($home_feature_store as $feature)
-                            <?php
-                            //calculate cashback
-                            $cashback = 0;
+                        @if($feature->stores->status==config('constants.status.is_active'))
 
-                            if ($feature->stores->use_network == config('constants.stores.use_network') && $feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->network_flat_switch == config('constants.stores.network_flat_switch_active')) {
-                                $cashback = $feature->stores->network_flat_rate;
-                            } elseif ($feature->stores->use_network == config('constants.stores.use_network') && $feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->network_flat_switch == config('constants.stores.network_flat_switch_dactive')) {
-                                $cashback = cashback($feature->stores->network_cashback);
-                            } elseif ($feature->stores->use_skimlinks == config('constants.stores.use_skimlinks') && $feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_active')) {
-                                $cashback = $feature->stores->skimlinks_min;
-                            } elseif ($feature->stores->use_skimlinks == config('constants.stores.use_skimlinks') && $feature->stores->cashback_commission == config('constants.stores.commission') && $feature->stores->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_dactive')) {
-                                $cashback = cashback($feature->stores->skimlinks_min);
-                            } else {
-                            }
-                            ?>
                             <div class="slide-wrapper">
                                 <!--slide coloumn 1 -->
                                 <a href="{{ route('view_codes', [$feature->id, 'feature_store']) }}" class="slide-card">
@@ -165,9 +153,10 @@
                                         <img src="{{ asset('images/' . $feature->image) }}" alt="">
                                     </picture>
                                     <h4>{{ $feature->title }}</h4>
-                                    <p>{{ $cashback }}% commission & cash back</p>
+                                    <p>{{ cashback_calculate($feature->stores) }}% commission & cash back</p>
                                 </a>
                             </div>
+                            @endif
                             <!--slide coloumn 1 end here -->
                         @endforeach
                     </div>
@@ -202,29 +191,16 @@
 
                         <div class="slider homepage-slider slides-to-show-4">
                             @foreach ($home_feature_deal as $deal)
-                                <?php
-                                //calculate cashback
-                                $cashback = 0;
-
-                                if ($deal->stores->use_network == config('constants.stores.use_network') && $deal->stores->cashback_commission == config('constants.stores.commission') && $deal->stores->network_flat_switch == config('constants.stores.network_flat_switch_active')) {
-                                    $cashback = $deal->stores->network_flat_rate;
-                                } elseif ($deal->stores->use_network == config('constants.stores.use_network') && $deal->stores->cashback_commission == config('constants.stores.commission') && $deal->stores->network_flat_switch == config('constants.stores.network_flat_switch_dactive')) {
-                                    $cashback = cashback($deal->stores->network_cashback);
-                                } elseif ($deal->stores->use_skimlinks == config('constants.stores.use_skimlinks') && $deal->stores->cashback_commission == config('constants.stores.commission') && $deal->stores->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_active')) {
-                                    $cashback = $deal->stores->skimlinks_min;
-                                } elseif ($deal->stores->use_skimlinks == config('constants.stores.use_skimlinks') && $deal->stores->cashback_commission == config('constants.stores.commission') && $deal->stores->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_dactive')) {
-                                    $cashback = cashback($deal->stores->skimlinks_min);
-                                } else {
-                                }
-                                ?>
+@if($deal->stores->status==config('constants.status.is_active'))
                                 <div class="slide-wrapper">
                                     <a href="{{ route('view_codes', [$deal->id, 'feature_deal']) }}" class="slide-card">
                                         <picture class="image">
                                             <img src="{{ asset('images/' . $deal->image) }}" alt="Watchfinder">
                                         </picture>
-                                        <p>{{ $cashback }}% commission & cash back</p>
+                                        <p>{{ cashback_calculate($deal->stores) }}% commission & cash back</p>
                                     </a>
                                 </div>
+                                @endif
                             @endforeach
                         </div>
                     </div>

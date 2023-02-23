@@ -64,7 +64,7 @@
                                                 <div class="col-md-4">
                                                     <label class="float-left font-weight-normal">Use Network</label>
                                                     <div class="custom-control custom-switch float-left ml-4">
-                                                        <input type="checkbox" name="use_network" value="1"
+                                                        <input type="checkbox" name="network_type" value="1"
                                                             class="custom-control-input use_network" id="use_networks">
                                                         <label class="custom-control-label" for="use_networks"></label>
                                                     </div>
@@ -72,7 +72,7 @@
                                                 <div class="col-md-4">
                                                     <label class="float-left font-weight-normal">Use Skimlinks</label>
                                                     <div class="custom-control custom-switch float-left ml-4">
-                                                        <input type="checkbox" name="use_skimlinks" value="1"
+                                                        <input type="checkbox" name="network_type" value="2"
                                                             class="custom-control-input use_skimlinks" id="use_kimlinks">
                                                         <label class="custom-control-label" for="use_kimlinks"></label>
                                                     </div>
@@ -186,16 +186,16 @@
                                         <!--/form-group-->
                                         <div class="row mt-4">
                                             <div class="col-md-4" id="network_hide">
+                                                <label for="">Networks</label>
                                                 <select class="form-control  select2" name="network_id"
                                                     style="width: 100%;">
-                                                    @foreach ($all_network as $network)
-                                                        <option value="{{ $network->id }}">{{ $network->name }}</option>
-                                                    @endforeach
+                                                    {{!! all_network_options() !!}}
 
 
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
+                                                <label for="">Status</label>
                                                 <select class="form-control  select2" name="status" style="width: 100%;">
 
                                                     <option value="1">Active</option>
@@ -210,6 +210,7 @@
                                         <div class="row mt-4">
 
                                             <div class="col-md-4">
+                                                <label for="">Countries</label>
                                                 <select class="form-control  select2" name="country_id"
                                                     style="width: 100%;">
 
@@ -221,6 +222,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
+                                                <label for="">Categories</label>
                                                 <select class="form-control  select2" name="category_id"
                                                     style="width: 100%;">
 
@@ -449,14 +451,15 @@
                                                     {{ 'store_name' }}
 
                                                 </small><br>Custom meta title</p>
+                                                {{-- {{dd(date()->year);}} --}}
                                             <input type="text" name="custom_meta_title" class="form-control"
-                                                placeholder="25% off  Coupons, Promo Codes - {{$date->format('F')}}, {{$date->year}}">
+                                                placeholder="25% off  Coupons, Promo Codes - {{get_date()->year}}, ">
                                         </div><!-- /.form-group -->
                                         <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-normal">Custom meta
                                                 description</label>
                                             <textarea class="form-control" cols="4" name="custom_meta_description"
-                                                placeholder=" Coupons for {{$date->format('F')}}, {{$date->year}}. Choose from 0 active  promo codes & coupons.  Promo Codes verified on {{$date->format('F')}} {{$date->day}}, {{$date->year}}."></textarea>
+                                                placeholder=" Coupons for {{get_date()->year}}, . Choose from 0 active  promo codes & coupons.  Promo Codes verified on {{get_date()->toFormattedDateString()}} ."></textarea>
                                         </div><!-- /.form-group -->
                                     </div><!-- /.tab-pane -->
 

@@ -31,7 +31,7 @@ class storecontroller extends Controller
         $change_excel_button_route = 'change';
 
         $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-            ->where('is_active', config('constants.is_active'))
+
 
             ->orderBy('id', 'DESC')
             ->get();
@@ -50,12 +50,12 @@ class storecontroller extends Controller
     }
     public function add_store(Request $request)
     {
-        $date = Carbon::now();
+       // $date = Carbon::now();
         $all_category = $this->category::where('category_type', 'store')->get();
         $all_country = $this->country::all();
-        $all_network = $this->network::all();
 
-        return view('adminpanel.add_store', compact('all_network', 'all_country', 'all_category', 'date'));
+
+        return view('adminpanel.add_store', get_defined_vars());
     }
 
     public function save_store(Request $request)
@@ -70,9 +70,10 @@ class storecontroller extends Controller
 
         $this->store->store_name = $request->store_name;
         $this->store->slug = phpslug($request->store_name);
-        $this->store->use_network = $request->use_network;
-        $this->store->use_skimlinks = $request->use_skimlinks;
-        $this->store->use_viglink = $request->use_viglink;
+        $this->network_type = $request->network_type;
+        // $this->store->use_network = $request->use_network;
+        // $this->store->use_skimlinks = $request->use_skimlinks;
+        // $this->store->use_viglink = $request->use_viglink;
         $this->store->cashback_commission = $request->cashback_commission;
         $this->store->network_cashback = $request->network_cashback;
         $this->store->network_commission = $request->network_commission;
@@ -92,7 +93,7 @@ class storecontroller extends Controller
         $this->store->custom_cashback_subtitle = $request->custom_cashback_subtitle;
         $this->store->custom_commission_title = $request->custom_commission_title;
         $this->store->custom_commission_subtitle = $request->custom_commission_subtitle;
-        $this->store->show_serp = $request->show_serp;
+        // $this->store->show_serp = $request->show_serp;
         $this->store->scrap_promocodes = $request->scrap_promocodes;
         $this->store->show_amazon = $request->show_amazon;
         $this->store->country_id = $request->country_id;
@@ -125,13 +126,13 @@ class storecontroller extends Controller
             $file->move(public_path('images'), $filename);
             $this->store->featured_image = $filename;
         }
-        //($request);
-        $success = $this->store->save();
+     //  dd ($request->network_type);
+       $success = $this->store->save();
 
         if ($success == true) {
             toast('Successfully save!', 'success')->timerProgressBar()->width('400px');
 
-            return redirect()->route('all_store');
+            return redirect()->back();
         } else {
             toast('Something went wrong!', 'error')->timerProgressBar()->width('400px');
             return redirect()->route('add_store');
@@ -140,13 +141,13 @@ class storecontroller extends Controller
     }
     public function edit_store(Request $request, $slug, $store_name = null)
     {
-        $date = Carbon::now();
+         $date = Carbon::now();
         $all_category = $this->category::where('category_type', 'store')->get();
         $all_country = $this->country::all();
         $all_network = $this->network::all();
         $current_store = $this->store::where('slug', $slug)->first();
         if ($store_name == null) {
-            return view('adminpanel.edit_store', compact('current_store', 'all_network', 'all_country', 'all_category', 'date'));
+            return view('adminpanel.edit_store', get_defined_vars());
 
         } else {
             return view('adminpanel.edit_store', compact('current_store', 'all_network', 'all_country', 'all_category', 'store_name'));
@@ -160,9 +161,10 @@ class storecontroller extends Controller
         $update = $this->store->where('slug', $slug)->first();
         $update->store_name = $request->store_name;
         $update->slug = phpslug($request->store_name);
-        $update->use_network = $request->use_network;
-        $update->use_skimlinks = $request->use_skimlinks;
-        $update->use_viglink = $request->use_viglink;
+         $update->network_type = $request->network_type;
+        // $update->use_network = $request->use_network;
+        // $update->use_skimlinks = $request->use_skimlinks;
+        // $update->use_viglink = $request->use_viglink;
         $update->cashback_commission = $request->cashback_commission;
         $update->network_cashback = $request->network_cashback;
         $update->network_commission = $request->network_commission;
@@ -183,7 +185,7 @@ class storecontroller extends Controller
         $update->custom_commission_title = $request->custom_commission_title;
         $update->custom_commission_subtitle = $request->custom_commission_subtitle;
 
-        $update->show_serp = $request->show_serp;
+        // $update->show_serp = $request->show_serp;
         $update->scrap_promocodes = $request->scrap_promocodes;
         $update->show_amazon = $request->show_amazon;
         $update->country_id = $request->country_id;
@@ -230,9 +232,7 @@ class storecontroller extends Controller
     }
     public function delete_store($slug)
     {
-        $success = $this->store::where('slug', $slug)->update([
-            'is_active' => 2,
-        ]);
+        $success = $this->store::where('slug', $slug)->delete();
         if ($success == true) {
 
             return redirect()->route('all_store');
@@ -241,8 +241,8 @@ class storecontroller extends Controller
 
     public function stores()
     {
-        $all_category = $this->category::where('category_type', 'store')->where('is_active', 1)->orderBy('id', 'DESC')->get();
-        $all_store = $this->store::with('networks', 'categories')->where('is_active', config('constants.is_active'))->where('status', config('constants.status.is_active'))->orderBy('id', 'DESC')->paginate(25);
+        $all_category = $this->category::where('category_type', 'store')->orderBy('id', 'DESC')->get();
+        $all_store = $this->store::with('networks', 'categories')->where('status', config('constants.status.is_active'))->orderBy('id', 'DESC')->paginate(25);
         return view('adminpanel.user.stores', compact('all_store', 'all_category'));
     }
 
@@ -305,134 +305,7 @@ class storecontroller extends Controller
 
 
     }
-    public function search_store_BK(Request $request, )
-    {
 
-        $where_clause_missing_data = [];
-        $where_clause_monotization = [];
-
-        $where_clause_missing_data[] = ['is_active', '=', 1];
-
-        if ($request->missing_data != 'empty') {
-
-            if ($request->missing_data == 'affliated_url') {
-                $where_clause_missing_data[] = ['affliated_url', '=', NULL];
-            } elseif ($request->missing_data == 'logo') {
-                $where_clause_missing_data[] = ['logo', '=', NULL];
-            } elseif ($request->missing_data == 'homepage_url') {
-                $where_clause_missing_data[] = ['homepage_url', '=', NULL];
-            }
-        }
-
-        if ($request->monotization != 'empty') {
-
-            if ($request->monotization == 'use_network') {
-                $where_clause_monotization[] = ['use_network', '=', config('constants.stores.use_network')];
-            } elseif ($request->monotization == 'use_skimlinks') {
-                $where_clause_monotization[] = ['use_skimlinks', '=', config('constants.stores.use_skimlinks')];
-            }
-        }
-
-        if (($request->monotization != 'empty')) {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->where($where_clause_monotization)
-                ->get();
-        }if ($request->missing_data != 'empty') {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->where($where_clause_missing_data)
-                ->get();
-        }if ($request->network_id != 'empty') {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->where('network_id', $request->network_id)
-                ->get();
-        }if ($request->status != 'empty') {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->where('status', $request->status)
-                ->get();
-
-        }
-        if (($request->monotization != 'empty') && ($request->network_id != 'empty')) {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->where($where_clause_monotization)
-                ->where('network_id', $request->network_id)
-                ->get();
-        }
-        if (($request->monotization != 'empty') && ($request->status != 'empty')) {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->where($where_clause_monotization)
-                ->where('status', $request->status)
-                ->get();
-        }
-        if (($request->monotization != 'empty') && ($request->missing_data != 'empty')) {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->where($where_clause_monotization)
-                ->where($where_clause_missing_data)
-                ->get();
-        }
-        if (($request->network_id != 'empty') && ($request->status != 'empty')) {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->where('network_id', $request->network_id)
-                ->where('status', $request->status)
-                ->get();
-        }
-        if (($request->network_id != 'empty') && ($request->missing_data != 'empty')) {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->where('network_id', $request->network_id)
-                ->where($where_clause_missing_data)
-                ->get();
-        }
-        if (($request->status != 'empty') && ($request->missing_data != 'empty')) {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->where('status', $request->status)
-                ->where($where_clause_missing_data)
-                ->get();
-        }
-        if (($request->status == 'empty') && ($request->missing_data == 'empty') && ($request->network_id == 'empty') && ($request->monotization == 'empty')) {
-            $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-                ->get();
-        }
-
-        if ($request->hidden_excel_export == 'hidden_excel_export') {
-
-            // p($all_store);
-            return $this->fileExport($all_store);
-        }
-
-        $network_selected_id = '';
-        if (isset($request->network_id) && $request->network_id > 0) {
-            $network_selected_id = $request->network_id;
-        }
-
-        return view('adminpanel.all_store', get_defined_vars());
-    }
-
-    public function to_skimlinks()
-    {
-        $allStore = $this->store::where('use_network', config('constants.stores.use_network'))
-            ->update(
-                array(
-                    'use_network' => null,
-                    'use_skimlinks' => config('constants.stores.use_skimlinks'),
-                ));
-        if ($allStore == true) {
-            toast('Successfully mooved all data to skimlinks!', 'success')->timerProgressBar()->width('400px');
-            return redirect()->route('all_store');
-        }
-    }
-    public function to_networks()
-    {
-
-        $allStore = $this->store::where('use_skimlinks', config('constants.stores.use_skimlinks'))
-            ->update(
-                array(
-                    'use_network' => config('constants.stores.use_network'),
-                    'use_skimlinks' => null,
-                ));
-        if ($allStore == true) {
-            toast('Successfully mooved all data to networks!', 'success')->timerProgressBar()->width('400px');
-            return redirect()->route('all_store');
-        }
-    }
 
     public function fileExport($stores)
     {
@@ -472,7 +345,7 @@ class storecontroller extends Controller
             $stores = store::select('id','store_name','logo')->with('offers')
                 ->where('store_name', 'LIKE', '%' . $store_name . '%')
                 ->where('status', config('constants.status.is_active'))
-                ->where('is_active', config('constants.is_active'))
+
                 ->take(3)
                 ->get();
         }

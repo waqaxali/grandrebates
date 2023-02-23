@@ -24,11 +24,11 @@ class offercontroller extends Controller
         $store = '';
         $path = '';
 
-            $stores=$this->store::select('id','store_name')->where('is_active',config('constants.is_active'))->where('status',config('constants.status.is_active'))->get();
+            $stores=$this->store::select('id','store_name')->where('status',config('constants.status.is_active'))->get();
 
             if(($request->type=='empty')){
 
-                $all_offers = $this->offer::with('stores')->where('is_active', config('constants.is_active'))
+                $all_offers = $this->offer::with('stores')
 
                 ->where('store_id',$request->store_id)
                 ->get();
@@ -37,7 +37,7 @@ class offercontroller extends Controller
             }
             elseif(($request->store_id=='empty')){
 
-                $all_offers = $this->offer::with('stores')->where('is_active', config('constants.is_active'))
+                $all_offers = $this->offer::with('stores')
                 ->where('kind',$request->type)
 
                 ->get();
@@ -45,7 +45,7 @@ class offercontroller extends Controller
 
             }
             else{
-                $all_offers = $this->offer::with('stores')->where('is_active', config('constants.is_active'))
+                $all_offers = $this->offer::with('stores')
                 ->where('kind',$request->type)
                 ->where('store_id',$request->store_id)
                 ->get();
@@ -62,12 +62,12 @@ class offercontroller extends Controller
     public function all_offers(Request $request,$slug = null)
 
     {
-        $date = Carbon::now()->toDateString();
+      
         $deal = '';
         $coupen = '';
         $store = '';
         $path = '';
-        $stores=$this->store::select('id','store_name')->where('is_active',config('constants.is_active'))->where('status',config('constants.status.is_active'))->get();
+        $stores=$this->store::select('id','store_name')->where('status',config('constants.status.is_active'))->get();
 
         if ($slug != null) {
             $path = 'single_store_offers';
@@ -78,8 +78,8 @@ class offercontroller extends Controller
             $all_offers = $this->offer::where('store_id', $store->id)->where('is_active', 1)->get();
 
         } else {
-
-            $all_offers = $this->offer::with('stores')->where('is_active', '1')->get();
+//->where('end_date', '>=', get_date()->toDateString())
+            $all_offers = $this->offer::with('stores')->get();
 
         }
         return view('adminpanel.offers.all_offers', get_defined_vars());
@@ -90,7 +90,7 @@ class offercontroller extends Controller
     public function add_offer($store_slug = null)
     {
         $all_store = $this->store::orderBy('id', 'desc')
-            ->where('is_active', config('constants.is_active'))
+
             ->where('status', config('constants.status.is_active'))
             ->get();
         if ($store_slug == null) {
@@ -145,7 +145,7 @@ class offercontroller extends Controller
     public function edit_offer(Request $request, $slug, $store_slug = null)
     {
 
-        $all_store = $this->store::orderBy('id', 'desc')->where('is_active', config('constants.is_active'))->where('status',config('constants.status.is_active'))->get();
+        $all_store = $this->store::orderBy('id', 'desc')->where('status',config('constants.status.is_active'))->get();
         $current_offer = $this->offer::where('slug', $slug)->first();
         if ($store_slug == null) {
             return view('adminpanel.offers.edit_offers', compact('current_offer', 'all_store'));
@@ -188,9 +188,7 @@ class offercontroller extends Controller
     public function delete_offer(Request $request, $slug)
     {
 
-        $success = $this->offer::where('slug', $slug)->update([
-            'is_active' => 2,
-        ]);
+        $success = $this->offer::where('slug', $slug)->delete();
         if ($success == true) {
 
             return redirect()->route('all_offers');

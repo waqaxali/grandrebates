@@ -60,8 +60,8 @@
                                                 <div class="col-md-4">
                                                     <label class="float-left font-weight-normal">Use Network</label>
                                                     <div class="custom-control custom-switch float-left ml-4">
-                                                        <input type="checkbox" name="use_network"
-                                                            {{ $current_store->use_network == '1' ? ' checked' : '' }}
+                                                        <input type="checkbox" name="network_type"
+                                                            {{ $current_store->network_type == '1' ? ' checked' : '' }}
                                                             value="1" class="custom-control-input use_network"
                                                             id="use_networks">
                                                         <label class="custom-control-label" for="use_networks"></label>
@@ -70,9 +70,9 @@
                                                 <div class="col-md-4">
                                                     <label class="float-left font-weight-normal">Use Skimlinks</label>
                                                     <div class="custom-control custom-switch float-left ml-4">
-                                                        <input type="checkbox" name="use_skimlinks"
-                                                            {{ $current_store->use_skimlinks == '1' ? ' checked' : '' }}
-                                                            value="1" class="custom-control-input use_skimlinks"
+                                                        <input type="checkbox" name="network_type"
+                                                            {{ $current_store->network_type == '2' ? ' checked' : '' }}
+                                                            value="2" class="custom-control-input use_skimlinks"
                                                             id="use_kimlinks">
                                                         <label class="custom-control-label" for="use_kimlinks"></label>
                                                     </div>
