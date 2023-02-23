@@ -84,13 +84,13 @@ if (!function_exists('get_date')) {
     function get_date()
     {
         $mytime = Carbon\Carbon::now();
-        $mytime->toDateString();
+       // $mytime->toDateString();
         return $mytime;
     }
 }
 
 if (!function_exists('cashback_calculate')) {
-    function cashback_calculate($store)
+    function cashback_calculate($store, $premium=false)
     {
 
         $cashback = 0;
@@ -104,7 +104,8 @@ if (!function_exists('cashback_calculate')) {
         } elseif ($store->network_type == config('constants.network_type.skimlinks') && $store->cashback_commission == config('constants.stores.commission') && $store->skimlinks_flat_rate == config('constants.stores.skimlinks_flat_rate_dactive')) {
             $cashback = cashback($store->skimlinks_min);
         }
-
+        if($premium)
+        return $cashback*2;
         return $cashback;
 
     }

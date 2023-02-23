@@ -1,6 +1,8 @@
 @extends('adminpanel.layout.resources.modals')
 @extends('adminpanel.layout.resources.header')
+@push('title')
 
+@endpush
 @section('content')
     <div class="content-wrapper">
         <div class="store-page-wrapper" data-controller="banner">
@@ -266,7 +268,7 @@
 
                                     </h3>
 
-                                    <p>Enter to Win more offers.</p>
+                                    <p>Enter to Win more offers {{cashback_calculate($feature->stores)*2 }} % cashback & commission.</p>
 
                                     <div class="tags">
                                         <span class="icon icon-star">Exclusive</span>

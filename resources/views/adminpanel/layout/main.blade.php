@@ -62,7 +62,7 @@
          <li class="nav-item dropdown dropdown-hover">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Blog</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-              <li><a href="{{ route('all_post') }}" class="dropdown-item">All Posts</a></li>
+              <li><a href="{{ route('posts') }}" class="dropdown-item">Posts</a></li>
 
 			  <li><a href="{{ route('add_post') }}" class="dropdown-item">Add Post</a></li>
 		   </ul>

@@ -86,8 +86,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('delete_store/{slug}', [storecontroller::class,'delete_store'])->name('delete_store');
         Route::any('search_store', [storecontroller::class,'search_store'])->name('search_store');
         Route::get('to_skimlinks', [storecontroller::class,'to_skimlinks'])->name('to_skimlinks');
-        Route::get('to_networks', [storecontroller::class,'to_networks'])->name('to_networks');
-        Route::get('fileExport', [storecontroller::class,'fileExport'])->name('fileExport');
+
 
 
 
@@ -118,12 +117,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('delete_category/{id?}', [categorycontroller::class,'delete_category'])->name('delete_category');
         Route::post('track_store_category_ajaxcall', [categorycontroller::class,'track_store_category_ajaxcall'])->name('track_store_category_ajaxcall');
 
-
+        Route::get('posts', [postcontroller::class,'posts'])->name('posts');
         Route::get('add_post', [postcontroller::class,'add_post'])->name('add_post');
         Route::post('save_post', [postcontroller::class,'save_post'])->name('save_post');
         Route::get('edit_post/{id}', [postcontroller::class,'edit_post'])->name('edit_post');
         Route::post('update_post/{id}', [postcontroller::class,'update_post'])->name('update_post');
-        Route::get('delete_post/{id}', [postcontroller::class,'delete_post'])->name('delete_post');
+        Route::post('delete_post/{id}', [postcontroller::class,'delete_post'])->name('delete_post');
 
         Route::get('all_featured', [featuredcontroller::class,'all_featured'])->name('all_featured');
         Route::get('add_featured', [featuredcontroller::class,'add_featured'])->name('add_featured');

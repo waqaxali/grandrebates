@@ -98,8 +98,34 @@
 
 
                         {{-- start of cashback activate  --}}
+                        @if ( $store->cashback_commission == config('constants.stores.commission') && empty($store->custom_cashback_title))
+                        <div class="notice store-notice mb-md hide-on-small has-cashback">
+                            <div class="icon bolt hide-on-small"></div>
+                            <div class="content">
+                                <div class="left">
+                                    <h6 class="nowrap">
+                                        <span>
+                                            <div class="icon bolt hide-on-medium"></div>
+                                            <span>Don’t miss out!</span>
+                                        </span>
 
-                        @if (isset($store->custom_cashback_title) && $store->cashback_commission == config('constants.stores.commission'))
+                                    </h6>
+                                    <p>You could combine these Tellus coupon codes {{ $store->custom_cashback_title }} with an extra {{ cashback_calculate($store) }}% in cash
+                                        back.<br>
+
+                                    </p>
+
+                                </div>
+                                @if (!Auth::check())
+                                    <a href="" target="_blank" class="button blue hide-on-small"data-fancybox=""
+                                        data-src="#modal-sign-up">Activate</a>
+                                @endif
+
+                            </div>
+                            <!-- <div class="icon clear"></div> -->
+                        </div>
+
+                        @elseif (isset($store->custom_cashback_title) && $store->cashback_commission == config('constants.stores.commission'))
                             <div class="notice store-notice mb-md hide-on-small has-cashback">
                                 <div class="icon bolt hide-on-small"></div>
                                 <div class="content">
@@ -267,7 +293,7 @@
 
                                         </h3>
 
-                                        <p>Enter to Win more offers.</p>
+                                        <p>Enter to Win {{cashback_calculate($store)*2}} % cashback & commission</p>
 
                                         <div class="tags">
                                             <span class="icon icon-star">Exclusive</span>

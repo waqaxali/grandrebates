@@ -121,7 +121,7 @@
                             <label for="">Monetization</label>
                             <select class="form-control select2" name="network_type" id="monetization" style="width: 100%;">
                                 <option {{ $request->network_type == '' ? 'selected' : '' }} selected="selected"
-                                    value="">Monetization : All</option>
+                                    value="">Select Monetization</option>
                                 <option {{ $request->network_type == 1 ? 'selected' : '' }} value="1">Network</option>
                                 <option {{ $request->network_type == 2 ? 'selected' : '' }} value="2">Skimlinks</option>
                             </select>
@@ -131,6 +131,7 @@
                         <div class="col-md-3 mb-2">
                             <label for="">Networks</label>
                             <select class="form-control select2" name="network_id" id="network_id" style="width: 100%;">
+                                <option  value="">Select Network</option>
                                 {!! all_network_options($network_selected_id) !!}
 
                             </select>
@@ -141,7 +142,7 @@
                             <label for="">Status</label>
                             <select class="form-control select2" name="status" id="status" style="width: 100%;">
 
-                                <option {{ $request->status == '' ? 'selected' : '' }} value="">Status: All</option>
+                                <option {{ $request->status == '' ? 'selected' : '' }} value="">Select Status</option>
                                 <option {{ $request->status == '1' ? 'selected' : '' }} value="1">Active</option>
                                 <option {{ $request->status == '0' ? 'selected' : '' }} value="0">Deactive(pause)
                                 </option>
@@ -290,7 +291,7 @@
                         <tbody id="hide_all_stores">
 
                             @forelse($all_store as $store)
-                               
+
                                 <tr>
                                     <td>{{ $store->networks->name }}</td>
                                     <td>{{ $store->store_name }}</td>

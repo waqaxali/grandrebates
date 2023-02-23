@@ -14,6 +14,10 @@ class postcontroller extends Controller
         $this->post= new post;
         $this->category= new Category;
     }
+    public function posts(){
+        $posts=$this->post::with('categories')->orderBy('id', 'DESC')->get();
+                    return view('adminpanel.post.posts',get_defined_vars());
+    }
     public function all_post($id=NULL){
                 $all_category=$this->category::where('category_type','post')->orderBy('id', 'DESC')->get();
                 if($id==Null){
@@ -50,15 +54,16 @@ class postcontroller extends Controller
                      if($success==true){
                          toast('Successfully save!','success')->timerProgressBar()->width('400px');
 
-                             return redirect()->route('all_post');
+                             return redirect()->route('posts');
                          }else{
                              toast('Something went wrong!','error')->timerProgressBar()->width('400px');
                              return redirect()->route('add_post');
                          }
      }
     public function edit_post(Request $request,$id){
+        $all_category=$this->category::where('category_type','post')->orderBy('id', 'DESC')->get();
                     $current_post = $this->post::find($id);
-                    return view('adminpanel.post.edit_post',compact('current_post'));
+                    return view('adminpanel.post.edit_post',compact('current_post','all_category'));
                 }
 
     public function update_post(Request $request,$id){
@@ -80,7 +85,7 @@ class postcontroller extends Controller
                           if($success==true){
                               toast('Successfully update record!','success')->timerProgressBar()->width('400px');
 
-                                  return redirect()->route('all_post');
+                                  return redirect()->back();
                               }else{
                                   toast('Something went wrong!','error')->timerProgressBar()->width('400px');
                                   return redirect()->route('add_post');
@@ -94,5 +99,13 @@ class postcontroller extends Controller
         $single_post=$this->post->find($id);
         return view('adminpanel.post.single_post',compact('single_post','all_post','all_category'));
 
+    }
+
+    public function delete_post($id){
+        $success = $this->post::where('id', $id)->delete();
+        if ($success == true) {
+
+            return redirect()->route('posts');
+        }
     }
 }
