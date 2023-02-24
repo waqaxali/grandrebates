@@ -120,3 +120,22 @@ if (!function_exists('count_offers')) {
         return $count;
     }
 }
+if (!function_exists('logo_resize')) {
+    function logo_resize($name)
+    {
+        $image=$name;
+
+        $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
+
+        $destinationPath = public_path('/images');
+        $img = Image::make($image->path());
+       $img->resize(400, 150, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save($destinationPath.'/'.$input['imagename']);
+
+
+        return $input['imagename'];
+    }
+}
+
+

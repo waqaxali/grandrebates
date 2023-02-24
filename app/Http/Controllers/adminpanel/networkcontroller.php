@@ -23,8 +23,10 @@ class networkcontroller extends Controller
 
     public  function save_network(Request $request)
     {
-        $request->validate([
+        $this->validate($request,[
                   'name'=>'required|unique:networks,name',
+                  ],[
+                    'name.required'=>'The Network name field  must be unique',
                   ]);
 
                   $this->network->name=$request->name;

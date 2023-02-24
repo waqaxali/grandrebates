@@ -17,7 +17,10 @@
               <li class="breadcrumb-item active">Dashboard v1</li>
             </ol>
           </div><!-- /.col --> --}}
-        </div><!-- /.row -->
+        </div>
+        <div class="row mb-1 ml-1 mt-3">
+            <a href="{{route('sliders')}}" class="btn btn-success">Back to sliders</a>
+            </div>
       </div><!-- /.container-fluid -->
     </div>
 
@@ -34,17 +37,7 @@
                   <div class="tab-pane active" id="settings">
                     <form class="form-horizontal " method="post" action="{{route('save_slider')}}"enctype="multipart/form-data">
                         @csrf
-                        <div class="form-group row">
-                            <label for="inputName" class="col-sm-12 col-form-label">Name</label>
-                            <div class="col-sm-12">
-                              <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror" id="inputName" placeholder="e.g. Apparel" value="{{ old('name') }}">
-                              @error('name')
-                              <div class="invalid-feedback">
-                                  {{ $message }}
-                              </div>
-                          @enderror
-                            </div>
-                          </div>
+
 
 
                       <div class="form-group row">
@@ -75,6 +68,17 @@
                         <div class="col-sm-12">
                           <input type="text" name="url" class="form-control  @error('url') is-invalid @enderror" id="inputName" placeholder="e.g. Apparel" value="{{ old('url') }}">
                           @error('url')
+                          <div class="invalid-feedback">
+                              {{ $message }}
+                          </div>
+                      @enderror
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputName" class="col-sm-12 col-form-label">Button name</label>
+                        <div class="col-sm-12">
+                          <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror" id="inputName" placeholder="e.g. Apparel" value="{{ old('name') }}">
+                          @error('name')
                           <div class="invalid-feedback">
                               {{ $message }}
                           </div>

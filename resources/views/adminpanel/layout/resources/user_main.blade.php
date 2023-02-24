@@ -156,10 +156,13 @@
 <div class="sticky" data-margin-top="24" data-sticky-class="is-sticky" data-sticky-for="1280" style="">
   <nav class="side-view-top-nav side-view-top-nav-top-bar ">
     <a href="#!" class="user sliding-menu-button">
-      {{-- <div class="avatar has-photo" style="background-image: url('https://lh3.googleusercontent.com/a/ALm5wu2T3KJV-kHktRQtXXUOzlqD1UySi09pLSbYbYI4Yw=s96-c')">
-
+        @if (!empty(Auth::user()->avatar))
+        <div class="avatar has-photo" style="background-image: url('{{asset('images/'.Auth::user()->avatar)}}')">
+        @else
+        <div class="avatar has-photo" style="background-image: url('avatar/upload.png')">
+        @endif
           <div class="notification-badge" data-new-activity-badge="">1772</div>
-      </div> --}}
+      </div>
       <div>
         <div class="username hide-on-small">{{Auth::user()->name}}</div>
         <div class="username hide-on-medium">•••</div>

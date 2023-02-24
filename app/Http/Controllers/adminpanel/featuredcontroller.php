@@ -32,9 +32,12 @@ class featuredcontroller extends Controller
     }
     public function save_featured(Request $request)
     {
-        $request->validate([
+        $this->validate($request,[
             'title'=>'required',
             'location'=>'required',
+            ],[
+                'title.required'=>'The title field is required',
+            'location.required'=>'The location field is required',
             ]);
         if ($request->location == 'Home-Page-Featured-Store') {
             $this->featured->featuredable_type = 'store';
@@ -45,7 +48,7 @@ class featuredcontroller extends Controller
         if ($request->location == 'Home-Page-Top-Deals') {
             $this->featured->featuredable_type = 'deal';
         }
-      
+
 
         $this->featured->location = $request->location;
         $this->featured->featureable_item_id = $request->featureable_item_id ? $request->featureable_item_id : '';

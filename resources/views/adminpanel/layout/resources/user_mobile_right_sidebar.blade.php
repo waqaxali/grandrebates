@@ -23,7 +23,15 @@
 
   <nav class="side-view-top-nav w-full ">
     <a href="#" class="user user-button-sidebar">
-      <div class="avatar has-photo"><div class="notification-badge" data-new-activity-badge="">1772</div>
+
+        @if (!empty(Auth::user()->avatar))
+        <div class="avatar has-photo" style="background-image: url('{{asset('images/'.Auth::user()->avatar)}}')">
+        @else
+        <div class="avatar has-photo" style="background-image: url('avatar/upload.png')">
+        @endif
+
+
+        <div class="notification-badge" data-new-activity-badge="">1772</div>
       </div>
       <div>
         <div class="username"></div>

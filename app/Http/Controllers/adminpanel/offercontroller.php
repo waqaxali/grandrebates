@@ -62,7 +62,7 @@ class offercontroller extends Controller
     public function all_offers(Request $request,$slug = null)
 
     {
-      
+
         $deal = '';
         $coupen = '';
         $store = '';
@@ -103,14 +103,21 @@ class offercontroller extends Controller
 
     public function save_offer(Request $request)
     {
-        $request->validate([
+        $this->validate($request,[
 
             'kind' => 'required',
             'title' => 'required|unique:offers,title',
             'code' => 'required',
             'end_date' => 'required',
 
-        ]);
+        ],
+    [
+        'kind.required' => ' The kind field is required.',
+        'title.required' => ' The title must be unique.',
+        'code.required' => ' The code field is required.',
+        'end_date.required' => ' The end date field is required.',
+
+    ]);
         if (isset($request->hidden_store_slug)) {
             $store = $this->store::where('slug', $request->hidden_store_slug)->first();
             $this->offer->store_id = $store->id;

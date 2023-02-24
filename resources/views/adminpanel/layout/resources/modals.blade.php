@@ -58,10 +58,15 @@
 
 <form class="auth-form" action="{{ route('register') }}" method="post" accept-charset="UTF-8">
 
-@csrf
-	<input value="" tabindex="203" placeholder="Email address" required="required" class="expand" id="" type="email" name="email" />
 
-	<input autocomplete="new-password" tabindex="204" placeholder="Password (8+ characters)" pattern=".{0}|.{8,}" required="required" class="expand" id="" type="password" name="password" />
+
+@csrf
+<input type="hidden" value="" id="hidden_store_id" name="hidden_store_id">
+    <input type="hidden" value="" id="hidden_from_codes" name="hidden_from_codes">
+    
+	<input value="" tabindex="203" placeholder="Email address" required="required" class="expand"  type="email" name="email" />
+
+	<input autocomplete="new-password" tabindex="204" placeholder="Password (8+ characters)" pattern=".{0}|.{8,}" required="required" class="expand"  type="password" name="password" />
 	<input type="submit" name="commit" value="Sign up with email" class="button expand nomar" tabindex="206" data-disable-with="Sign up with email" />
 
   <div class="separator">Or, sign up with</div>
@@ -92,8 +97,8 @@
 
 
 <form class="auth-form" action="" accept-charset="UTF-8" method="post">
-	 <input value="" tabindex="203" placeholder="Email address" required="required" class="expand" id="" type="email" name="user[email]" />
-	 <input autocomplete="new-password" tabindex="204" placeholder="Password (8+ characters)" pattern=".{0}|.{8,}" required="required" class="expand" id="" type="password" name="user[password]" />
+	 <input value="" tabindex="203" placeholder="Email address" required="required" class="expand"  type="email" name="user[email]" />
+	 <input autocomplete="new-password" tabindex="204" placeholder="Password (8+ characters)" pattern=".{0}|.{8,}" required="required" class="expand"  type="password" name="user[password]" />
 	 <input type="submit" name="commit" value="Sign up with email" class="button expand nomar" tabindex="206" data-disable-with="Sign up with email" />
 
   <div class="separator">Or, sign up with</div>

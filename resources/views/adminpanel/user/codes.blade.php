@@ -2,6 +2,17 @@
 @extends('adminpanel.layout.resources.header')
 
 @section('content')
+
+
+
+<?php
+  if (Auth::user()->premium == config('constants.user.premium'))
+        $cashback=cashback_calculate($store, true);
+        else
+        $cashback= cashback_calculate($store);
+
+
+?>
     <div class="content-wrapper">
         <div class="store-page-wrapper" data-controller="banner">
 
@@ -24,13 +35,13 @@
                             <div class="right">
                                 <h1>{{ $store->store_name }} Coupons &amp; Promo Codes</h1>
                                 <div class="stats">
-                                    @if (cashback_calculate($store) != '0')
+                                    @if ($cashback != '0')
                                         <span class="stats-badge">
                                             <span class="hide-on-small">
                                                 Coupons for
                                             </span>
 
-                                            {{ cashback_calculate($store) }}% Cash Back
+                                            {{ $cashback }}% Cash Back
 
 
                                         </span>
@@ -110,14 +121,14 @@
                                         </span>
 
                                     </h6>
-                                    <p>You could combine these Tellus coupon codes {{ $store->custom_cashback_title }} with an extra {{ cashback_calculate($store) }}% in cash
+                                    <p>You could combine these {{$store->store_name }} coupon codes  with an extra {{ $cashback }}% in cash
                                         back.<br>
 
                                     </p>
 
                                 </div>
                                 @if (!Auth::check())
-                                    <a href="" target="_blank" class="button blue hide-on-small"data-fancybox=""
+                                    <a href="" onclick="pass_id_and_page_source({{$store->id}},'from_codes')" target="_blank" class="button blue hide-on-small"data-fancybox=""
                                         data-src="#modal-sign-up">Activate</a>
                                 @endif
 
@@ -137,7 +148,7 @@
                                             </span>
 
                                         </h6>
-                                        <p>{{ $store->custom_cashback_title }} with an extra {{ cashback_calculate($store) }}% in cash
+                                        <p>{{ $store->custom_cashback_title }} with an extra {{ $cashback }}% in cash
                                             back.<br>
 
                                         </p>
@@ -697,22 +708,15 @@
             });
         }
 
-        function activate() {
-            $('#change_activate').text('Activated');
-
-        }
-
-        function activate_avon_offer() {
-            $('#change_avon_offer_activate').text('Activated');
-
+        function pass_id_and_page_source(id,source) {
+//send value to modal
+$('#hidden_store_id').val(id);
+$('#hidden_from_codes').val(source);
         }
 
 
 
-        //         $('#activated').on('click',function(){
-        // $(this).hide();
-        // $('#hide_activated').show();
 
-        //         });
+
     </script>
 @endsection

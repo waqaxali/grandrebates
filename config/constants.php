@@ -24,4 +24,8 @@ return [
         'network' => 1,
         'skimlinks' => 2,
     ],
+    'user' => [
+        'premium' => 2,
+        
+    ],
 ];

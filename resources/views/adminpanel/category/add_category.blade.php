@@ -11,13 +11,11 @@
           <div class="col-sm-6">
             <h1 class="m-0">Add New Category</h1>
           </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Add New Category</a></li>
-              <li class="breadcrumb-item active">Dashboard v1</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
+
+        </div>
+        <div class="row mb-1 ml-1 mt-3">
+            <a href="{{route('all_category')}}" class="btn btn-success">Back to categories</a>
+            </div>
       </div><!-- /.container-fluid -->
     </div>
 
@@ -46,21 +44,26 @@
                       <div class="form-group row">
                         <label for="inputName" class="col-sm-12 col-form-label">Name</label>
                         <div class="col-sm-12">
-                          <input type="text" name="name" class="form-control" id="inputName" placeholder="e.g. Apparel">
+                          <input type="text" name="name" class="form-control  @error('name') is-invalid @enderror" id="inputName" placeholder="e.g. Apparel"  value="{{ old('name') }}">
+                          @error('name')
+                          <div class="invalid-feedback">
+                              {{ $message }}
+                          </div>
+                          @enderror
                         </div>
                       </div>
 <div id="category">
                       <div class="form-group row" >
                         <label for="inputEmail"  class="col-sm-12 col-form-label">Description</label>
                         <div class="col-sm-12">
-                          <textarea class="form-control" name="description" placeholder=""></textarea>
+                          <textarea class="form-control" name="description" placeholder="">{{ old('description') }}</textarea>
                         </div>
                       </div>
 
 					  <div class="form-group row">
                         <label for="inputEmail"  class="col-sm-12 col-form-label">Description bottom (Shopping & Savings Tips)</label>
                         <div class="col-sm-12">
-                          <textarea class="form-control" name="description_bottom" placeholder=""></textarea>
+                          <textarea class="form-control" name="description_bottom" placeholder="">{{ old('description_bottom') }}</textarea>
                         </div>
                       </div>
 

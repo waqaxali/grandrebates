@@ -12,8 +12,8 @@
                             <h1>{{ $slider->title }}</h1>
                             <p class="lead">{{ $slider->description }}.</p>
                             <div class="buttons">
-                                <a href="javascript:void(0);" class="button medium primary" data-fancybox
-                                    data-src="#modal-sign-up" data-source="testimonials">Sign up for free</a>
+                                {{-- <a href="javascript:void(0);" class="button medium primary" data-fancybox
+                                    data-src="#modal-sign-up" data-source="testimonials">Sign up for free</a> --}}
                                 <a href="{{ $slider->url }}" target="_blank"
                                     class="hide-on-small button medium success-btn" rel="nofollow">{{ $slider->name }}</a>
                             </div>
@@ -115,7 +115,7 @@
                 {{-- style tag will have to remove after testing --}}
                 <div class="cat-wrapper featured_categories_slider" style="display: block">
                     @foreach ($home_feature_category as $category)
-                    
+
                         <div class="cat-col">
                             <a href="{{ route('categories', $category->featureable_item_id) }}">
                                 <img src="{{ asset('images/' . $category->image) }}" class="cal_logos">

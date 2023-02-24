@@ -7,12 +7,14 @@ use App\Models\Feature;
 use App\Models\Offer;
 use App\Models\store;
 use App\Models\User;
+use App\Models\slider;
 use App\Models\referral;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Session;
 Use Carbon;
+use Image;
 
 class usercontroller extends Controller
 {
@@ -129,8 +131,14 @@ class usercontroller extends Controller
 
     public function update_user(Request $request)
     {
-        $success = $this->user::whereId(auth()->user()->id)->update([
+            $image='';
+            if($request->file('avatar')){
+                $image=logo_resize($request->file('avatar'));
+            }
+             $success = $this->user::whereId(auth()->user()->id)->update([
             'name' => $request->name,
+            'username' => $request->username,
+             'avatar' => $image,
             'phone' => $request->phone,
         ]);
 
@@ -158,12 +166,13 @@ class usercontroller extends Controller
     public function reffereduser($username)
     {
         Session::put('username', $username);
+        $sliders=slider::orderBy('id','desc')->get();
         $home_feature_category = Feature::where('location', 'Home-Page-Featured-Category')->orderBy('id', 'desc')->get();
         $home_feature_store = Feature::with('stores')->with('stores')->where('location', 'Home-Page-Featured-Store')->orderBy('id', 'desc')->get();
 
         $home_feature_deal = Feature::with('stores')->where('location', 'Home-Page-Top-Deals')->orderBy('id', 'desc')->take(4)->get();
 
-        return view('welcome', compact('home_feature_category', 'home_feature_store', 'home_feature_deal'));
+        return view('welcome', compact('home_feature_category', 'home_feature_store', 'home_feature_deal','sliders'));
     }
     public function welcome()
     {

@@ -98,8 +98,34 @@
 
                 <div class="merchant-page-wrapper design-2022 narrow narrow " data-banner-target="pageContent">
                     <div class="store-page">
+                        @if ( $feature->stores->cashback_commission == config('constants.stores.commission') && empty($feature->stores->custom_cashback_title))
+                        <div class="notice store-notice mb-md hide-on-small has-cashback">
+                            <div class="icon bolt hide-on-small"></div>
+                            <div class="content">
+                                <div class="left">
+                                    <h6 class="nowrap">
+                                        <span>
+                                            <div class="icon bolt hide-on-medium"></div>
+                                            <span>Don’t miss out!</span>
+                                        </span>
 
-                        @if (isset($feature->stores->custom_cashback_title) && $feature->stores->cashback_commission==config('constants.stores.commission'))
+                                    </h6>
+                                    <p>You could combine these {{$feature->title }} coupon codes  with an extra {{ cashback_calculate($feature->stores) }}% in cash
+                                        back.<br>
+
+                                    </p>
+
+                                </div>
+                                @if (!Auth::check())
+                                    <a href=""  target="_blank" class="button blue hide-on-small"data-fancybox=""
+                                        data-src="#modal-sign-up">Activate</a>
+                                @endif
+
+                            </div>
+                            <!-- <div class="icon clear"></div> -->
+                        </div>
+
+                        @elseif (isset($feature->stores->custom_cashback_title) && $feature->stores->cashback_commission==config('constants.stores.commission'))
 
                             <div class="notice store-notice mb-md hide-on-small has-cashback">
                                 <div class="icon bolt hide-on-small"></div>

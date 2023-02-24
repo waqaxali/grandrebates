@@ -20,12 +20,15 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('username')->nullable();
-
+            $table->string('avatar')->nullable();
+            $table->string('premium')->default(1);
+            $table->string('subscription_date')->default(1);
             $table->tinyInteger('role')->default('2');
             $table->string('provider_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('isActive')->default('1');
+            $table->string('premium')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

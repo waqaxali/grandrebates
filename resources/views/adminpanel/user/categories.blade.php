@@ -80,7 +80,9 @@
                                         </a>
                                     </td>
 
-                                    <td> {{ cashback_calculate($store) }} %</td>
+                                 
+                                    <td>{{ cashback_calculate($store) }}% Cash Back</td>
+
                                     <td>
                                         -
                                     </td>

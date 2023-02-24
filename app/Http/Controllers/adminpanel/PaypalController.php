@@ -103,9 +103,16 @@ class PaypalController extends Controller
             array(
                 'amount' => $request->amount,
                 'payment_id'=>$payment->getId(),
-                'user_id'=>Auth::user()->id
+                'user_id'=>Auth::user()->id,
+                'subscription_date'=>get_date()->toDateString()
             )
        );
+       DB::table('users')->update(
+        array(
+            'premium'=>'2',
+            'subscription_date'=>get_date()->toDateString()
+        )
+   );
 
         Session::put('paypal_payment_id', $payment->getId());
 

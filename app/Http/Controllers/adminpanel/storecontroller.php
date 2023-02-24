@@ -60,10 +60,12 @@ class storecontroller extends Controller
 
     public function save_store(Request $request)
     {
-        $request->validate([
+        $this->validate($request,[
 
             'store_name' => 'required|unique:stores,store_name',
 
+        ],[
+            'store_name.required' => 'The store name must be unique',
         ]);
 
         $this->store->user_id = Auth::user()->id;
@@ -132,7 +134,7 @@ class storecontroller extends Controller
         if ($success == true) {
             toast('Successfully save!', 'success')->timerProgressBar()->width('400px');
 
-            return redirect()->back();
+            return redirect()->route('all_store');
         } else {
             toast('Something went wrong!', 'error')->timerProgressBar()->width('400px');
             return redirect()->route('add_store');

@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\referral;
 use App\Models\User;
+use App\Models\store;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Session;
+use Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 class RegisterController extends Controller
 {
@@ -67,35 +69,35 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
 
-
         $username = explode('@', $data['email']);
+           $new_user= User::create([
 
-        if (Session::get('username') != '') {
-            $user = User::where('username', Session::get('username'))->first();
-            $auth_id = $user->id;
-            $new_user = User::create([
                 'email' => $data['email'],
                 'username' => $username[0],
+                'name' => $username[0],
                 'slug' => phpslug($username[0]),
                 'password' => Hash::make($data['password']),
             ]);
+
             $new_user_id = $new_user->id;
+         if (Session::get('username') != '') {
+                $user = User::where('username', Session::get('username'))->first();
+                $auth_id = $user->id;
+                referral::create([
+                    'user_id' => $auth_id,
+                    'referral_id' => $new_user_id,
+                ]);
+           // return $new_user;
 
-            referral::create([
-                'user_id' => $auth_id,
-                'referral_id' => $new_user_id,
-
-            ]);
-            return $new_user;
-        } else {
-            return User::create([
-
-                'email' => $data['email'],
-                'username' => $username[0],
-                'slug' => phpslug($username[0]),
-                'password' => Hash::make($data['password']),
-            ]);
         }
+        // elseif(!empty($data['hidden_store_id'])){
+        //    $store= store::find($id);
+        //     return redirect()->route('codes',compact('store'));
+        // }
+        else{
+            //return $new_user;
+        }
+        return back()->with($new_user);
 
     }
 

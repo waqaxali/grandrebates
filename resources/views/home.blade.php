@@ -8,12 +8,12 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 offset-md-2 mt-4 mb-0">
-                        <form action="simple-results.html">
+                        <form action="#">
                             <div class="input-group">
                                 <input type="search" id="search" class="form-control form-control-lg"
                                     placeholder="Search or paste a product link">
                                 <div class="input-group-append">
-                                    <button type="submit" class="btn btn-lg btn-default">
+                                    <button  class="btn btn-lg btn-default">
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </div>

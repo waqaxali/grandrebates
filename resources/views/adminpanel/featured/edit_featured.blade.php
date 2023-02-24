@@ -16,6 +16,9 @@
             </ol>
           </div><!-- /.col --> --}}
                 </div><!-- /.row -->
+                <div class="row mb-1 ml-1 mt-3">
+                    <a href="{{route('all_featured')}}" class="btn btn-success">Back to featured</a>
+                    </div>
             </div><!-- /.container-fluid -->
         </div>
 

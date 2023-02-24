@@ -33,6 +33,11 @@ class slidercontroller extends Controller
             'name'=>'required',
             'description'=>'required',
             'url'=>'required',
+            ],[
+                'title.required'=>'The title field is required',
+            'name.required'=>'The button name field is required',
+            'description.required'=>'The description field is required',
+            'url.required'=>'The url field is required',
             ]);
         $this->slider->url = $request->url;
         $this->slider->title = $request->title;

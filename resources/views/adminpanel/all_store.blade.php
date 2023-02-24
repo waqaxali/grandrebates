@@ -90,7 +90,7 @@
                 </div>
 
 
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-md-8 offset-md-2 mt-4 ">
                         <form action="simple-results.html">
                             <div class="input-group">
@@ -113,7 +113,7 @@
                         </div>
 
                 </div>
-                </div>
+                </div> --}}
                 <form action="{{ route('search_store') }}" method="post">
                     @csrf
                     <div class="row">

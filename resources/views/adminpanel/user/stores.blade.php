@@ -70,7 +70,6 @@
                         </thead>
                         <tbody>
                             @foreach ($all_store as $store)
-
                                 <tr>
                                     <td>
                                         <a class="flex-row" href="{{ route('codes', $store->id) }}">
@@ -80,8 +79,10 @@
                                             {{ $store->store_name }}
                                         </a>
                                     </td>
+                                  
+                                        <td>{{ cashback_calculate($store) }}% Cash Back</td>
 
-                                        <td>{{cashback_calculate($store)}}% Cash Back</td>
+
 
                                     <td> — </td>
                                     @if (Auth::check())

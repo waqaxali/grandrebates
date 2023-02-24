@@ -39,6 +39,13 @@ class categorycontroller extends Controller
     }
     public function save_category(Request $request)
     {
+        $this->validate($request,[
+            'name'=>'required',
+            // 'location'=>'required',
+            ],[
+                'name.required'=>'The name field is required',
+            // 'location.required'=>'The location field is required',
+            ]);
 
         $this->category->name = $request->name;
         $this->category->description = $request->description;
