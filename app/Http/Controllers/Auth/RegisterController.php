@@ -87,7 +87,7 @@ class RegisterController extends Controller
                     'user_id' => $auth_id,
                     'referral_id' => $new_user_id,
                 ]);
-           // return $new_user;
+           return $new_user;
 
         }
         // elseif(!empty($data['hidden_store_id'])){
@@ -95,9 +95,9 @@ class RegisterController extends Controller
         //     return redirect()->route('codes',compact('store'));
         // }
         else{
-            //return $new_user;
+            return $new_user;
         }
-        return back()->with($new_user);
+
 
     }
 

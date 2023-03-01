@@ -12,7 +12,7 @@
                 <table class="tables">
                     <thead>
                         <tr>
-                            <th> Name</th>
+                            <th> User Name</th>
                             <th> Email </th>
                             <th>Phone</th>
 
@@ -23,7 +23,7 @@
 
 
                         <tr>
-                            <td> {{$user->name}}</td>
+                            <td> {{$user->username}}</td>
                             <td>{{$user->email}}</td>
                             <td> {{$user->phone}}</td>
                             {{-- <td class="action-column">

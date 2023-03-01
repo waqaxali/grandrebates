@@ -2,14 +2,24 @@
 @extends('adminpanel.layout.resources.header')
 
 @section('content')
+@push('meta')
 
+<meta property="og:custom_meta_title" content="{{$store->custom_meta_title}}">
+<meta property="og:custom_meta_description" content="{{$store->custom_meta_description}}">
+
+@endpush
 
 
 <?php
-  if (Auth::user()->premium == config('constants.user.premium'))
+if(Auth::check()){
+    if (Auth::user()->premium == config('constants.user.premium'))
         $cashback=cashback_calculate($store, true);
         else
         $cashback= cashback_calculate($store);
+}
+
+else
+$cashback= cashback_calculate($store);
 
 
 ?>
@@ -155,7 +165,7 @@
 
                                     </div>
                                     @if (!Auth::check())
-                                        <a href="" target="_blank" class="button blue hide-on-small"data-fancybox=""
+                                        <a href=""  onclick="pass_id_and_page_source({{$store->id}},'from_codes')"  target="_blank" class="button blue hide-on-small"data-fancybox=""
                                             data-src="#modal-sign-up">Activate</a>
                                     @endif
 
@@ -249,7 +259,7 @@
                                         </div>
                                         <div class="right">
                                             <a href=""
-                                                onclick="fencybox_value('{{ $offer->code }}','{{ $offer->title }}')"
+                                                onclick="fencybox_value('{{ $offer->code }}','{{ $offer->title }}','{{ $store->id }}')"
                                                 data-fancybox="" data-src="#offer" id="{{ $offer->id }}" target="_blank"
                                                 class="button nomar coupon hide-on-small"><span>Get
                                                     code</span></a>
@@ -266,11 +276,11 @@
                                         <div class="right offer-stripe-main">
                                             <div class="left">
                                                 <h3>
-                                                    Avon Offer
+                                                    15% off Extra Holidays Coupon
 
                                                 </h3>
 
-                                                <p>Enter to Win Makeup, Skincare and More.</p>
+                                                <p>Get 15% off bookings when you enter this Extra Holidays coupon code.</p>
 
                                                 <div class="tags">
                                                     <span class="icon icon-star">Exclusive</span>
@@ -283,7 +293,7 @@
                                                 <div class="right">
                                                     <a href=""
                                                         class="button secondary bordered nomar hide-on-small"
-                                                        onclick="fencybox_value('','')" data-fancybox=""
+                                                        onclick="fencybox_value('','','{{ $store->id }}')" data-fancybox=""
                                                         data-src="#offer" id="">Activate</a>
                                                     <span class="hide-on-medium arrow-icon">
                                                     </span>
@@ -304,7 +314,7 @@
 
                                         </h3>
 
-                                        <p>Enter to Win {{cashback_calculate($store)*2}} % cashback & commission</p>
+                                        <p>Enter to Win {{$cashback}} % cashback & commission</p>
 
                                         <div class="tags">
                                             <span class="icon icon-star">Exclusive</span>
@@ -316,8 +326,8 @@
                                     @if (!Auth::check())
                                         <div class="right">
                                             <a href="" class="button secondary bordered nomar hide-on-small"
-                                                onclick="fencybox_value('','')" data-fancybox="" data-src="#offer"
-                                                id="">Activate</a>
+                                                onclick="fencybox_value('','','{{ $store->id }}')" data-fancybox="" data-src="#offer"
+                                                id="" >Activate</a>
                                             <span class="hide-on-medium arrow-icon">
                                             </span>
                                         </div>
@@ -639,6 +649,7 @@
 
 
     <script>
+
         var url = '{{ $store->affliated_url }}';
         console.log(url);
         $(document).ready(function() {
@@ -648,16 +659,22 @@
             $('#hide_activated').hide();
         });
 
-        function fencybox_value(code, title) {
+        function fencybox_value(code, title ,store_id) {
 
-
+//put these value to register form
+// $('#hidden_store_id').val(id);
+// $('#hidden_from_codes').val(source);
 
             $('#copy-code').attr('data-clipboard-text', code);
+
             $('#inner_value').html(title);
             $('#copy-code-input').val(code);
             $('#hide_input_section').show();
             if (code == '') {
                 $('#hide_input_section').hide();
+            }
+            if (store_id != '') {
+                pass_id_and_page_source(store_id,'from_code')
             }
 
         };
@@ -709,6 +726,7 @@
         }
 
         function pass_id_and_page_source(id,source) {
+            console.log(id);
 //send value to modal
 $('#hidden_store_id').val(id);
 $('#hidden_from_codes').val(source);

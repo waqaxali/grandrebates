@@ -1,9 +1,26 @@
 @extends('adminpanel.layout.resources.modals')
 @extends('adminpanel.layout.resources.header')
-@push('title')
+
+@section('content')
+@push('meta')
+
+<meta property="og:custom_meta_title" content="{{$feature->stores->custom_meta_title}}">
+<meta property="og:custom_meta_description" content="{{$feature->stores->custom_meta_description}}">
 
 @endpush
-@section('content')
+
+<?php if(Auth::check()){
+    if (Auth::user()->premium == config('constants.user.premium'))
+        $cashback=cashback_calculate($feature->stores, true);
+        else
+        $cashback= cashback_calculate($feature->stores);
+}
+
+else
+$cashback= cashback_calculate($feature->stores);
+
+
+?>
     <div class="content-wrapper">
         <div class="store-page-wrapper" data-controller="banner">
 
@@ -29,13 +46,13 @@
                             <div class="right">
                                 <h1>{{ $feature->title }} Coupons &amp; Promo Codes</h1>
                                 <div class="stats">
-                                    @if(cashback_calculate($feature->stores) !='0')
+                                    @if($cashback !='0')
                                     <span class="stats-badge">
                                         <span class="hide-on-small">
                                             Coupons for
                                         </span>
 
-                                        {{ cashback_calculate($feature->stores) }}% Cash Back
+                                        {{ $cashback }}% Cash Back
 
 
                                     </span>
@@ -110,15 +127,16 @@
                                         </span>
 
                                     </h6>
-                                    <p>You could combine these {{$feature->title }} coupon codes  with an extra {{ cashback_calculate($feature->stores) }}% in cash
+                                    <p>You could combine these {{$feature->title }} coupon codes  with an extra {{ $cashback }}% in cash
                                         back.<br>
 
                                     </p>
 
                                 </div>
                                 @if (!Auth::check())
-                                    <a href=""  target="_blank" class="button blue hide-on-small"data-fancybox=""
+                                    <a href=""  target="_blank" class="button blue hide-on-small"data-fancybox="" onclick="pass_id_and_page_source({{$feature->stores->id}},'from_codes')"
                                         data-src="#modal-sign-up">Activate</a>
+
                                 @endif
 
                             </div>
@@ -138,13 +156,13 @@
                                             </span>
 
                                         </h6>
-                                        <p>{{ $feature->stores->custom_cashback_title }}  with an extra {{cashback_calculate($feature->stores)}}% in cash back.<br>
+                                        <p>{{ $feature->stores->custom_cashback_title }}  with an extra {{$cashback}}% in cash back.<br>
 
                                     </div>
 
 
                                     @if (!Auth::check())
-                                            <a href="" target="_blank" class="button blue hide-on-small"data-fancybox="" data-src="#modal-sign-up">Activate</a>
+                                            <a href="" target="_blank" class="button blue hide-on-small"data-fancybox="" data-src="#modal-sign-up" onclick="pass_id_and_page_source({{$feature->stores->id}},'from_codes')">Activate</a>
 
                                     @endif
                                 </div>
@@ -254,11 +272,11 @@
                                         <div class="right offer-stripe-main">
                                             <div class="left">
                                                 <h3>
-                                                    Avon Offer
+                                                    15% off Extra Holidays Coupon
 
                                                 </h3>
 
-                                                <p>Enter to Win Makeup, Skincare and More.</p>
+                                                <p>Get 15% off bookings when you enter this Extra Holidays coupon code.</p>
 
                                                 <div class="tags">
                                                     <span class="icon icon-star">Exclusive</span>
@@ -271,7 +289,7 @@
 
                                                 <div class="right">
                                                     <a href="" class="button secondary bordered nomar hide-on-small"
-                                                        onclick="fencybox_value('','')" data-fancybox="" data-src="#offer"
+                                                        onclick="fencybox_value('','',{{$feature->stores->id}})" data-fancybox="" data-src="#offer"
                                                         id="">Activate</a>
                                                     <span class="hide-on-medium arrow-icon">
                                                     </span>
@@ -294,7 +312,7 @@
 
                                     </h3>
 
-                                    <p>Enter to Win more offers {{cashback_calculate($feature->stores)*2 }} % cashback & commission.</p>
+                                    <p>Enter to Win more offers {{$cashback}} % cashback & commission.</p>
 
                                     <div class="tags">
                                         <span class="icon icon-star">Exclusive</span>
@@ -307,7 +325,7 @@
 
                                     <div class="right">
                                         <a href="" class="button secondary bordered nomar hide-on-small"
-                                            onclick="fencybox_value('','')" data-fancybox="" data-src="#offer"
+                                            onclick="fencybox_value('','',{{$feature->stores->id}})" data-fancybox="" data-src="#offer"
                                             id="">Activate</a>
                                         <span class="hide-on-medium arrow-icon">
                                         </span>
@@ -612,7 +630,7 @@
             $("#model-hide").hide();
         });
 
-        function fencybox_value(code, title) {
+        function fencybox_value(code, title,store_id) {
 
 
 
@@ -622,6 +640,9 @@
             $('#hide_input_section').show();
             if (code == '') {
                 $('#hide_input_section').hide();
+            }
+            if (store_id != '') {
+                pass_id_and_page_source(store_id,'from_code')
             }
 
         };
@@ -672,14 +693,11 @@
             });
         }
 
-        function activate() {
-            $('#change_activate').text('Activated');
-
-        }
-
-        function activate_avon_offer() {
-            $('#change_avon_offer_activate').text('Activated');
-
+        function pass_id_and_page_source(id,source) {
+            console.log(id);
+//send value to modal
+$('#hidden_store_id').val(id);
+$('#hidden_from_codes').val(source);
         }
     </script>
 

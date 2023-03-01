@@ -56,14 +56,14 @@
       <p></p>
       <p class="text-bonus">Join now and earn a $5 Welcome Bonus in 2 easy steps!</p>
 
-<form class="auth-form" action="{{ route('register') }}" method="post" accept-charset="UTF-8">
+<form class="auth-form" action="{{ route('register_user') }}" method="post" accept-charset="UTF-8">
 
 
 
 @csrf
 <input type="hidden" value="" id="hidden_store_id" name="hidden_store_id">
     <input type="hidden" value="" id="hidden_from_codes" name="hidden_from_codes">
-    
+
 	<input value="" tabindex="203" placeholder="Email address" required="required" class="expand"  type="email" name="email" />
 
 	<input autocomplete="new-password" tabindex="204" placeholder="Password (8+ characters)" pattern=".{0}|.{8,}" required="required" class="expand"  type="password" name="password" />

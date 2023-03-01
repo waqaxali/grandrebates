@@ -43,11 +43,11 @@
               <a href="{{route('subscription')}}" ><i class="fa fa-money" style="font-size:22px"></i>&nbsp;&nbsp;&nbsp;&nbsp;Premium</a>
             </nav>
           </div>
-          <div class="bottom">
+          {{-- <div class="bottom">
             <nav>
               <a class="compact" href="#">Admin</a>
             </nav>
-          </div>
+          </div> --}}
         </div>
       </div>
 

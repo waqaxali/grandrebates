@@ -5,16 +5,15 @@ namespace App\Http\Controllers\adminpanel;
 use App\Http\Controllers\Controller;
 use App\Models\Feature;
 use App\Models\Offer;
+use App\Models\referral;
+use App\Models\slider;
 use App\Models\store;
 use App\Models\User;
-use App\Models\slider;
-use App\Models\referral;
 use Auth;
+use Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Session;
-Use Carbon;
-use Image;
 
 class usercontroller extends Controller
 {
@@ -26,6 +25,97 @@ class usercontroller extends Controller
         $this->offers = new Offer;
         $this->referrals = new referral;
     }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public function users()
+    {
+        $users = $this->user::where('role', 1)->orderBy('id', 'desc')->get();
+        //dd( $subcategories);
+
+        return view('adminpanel.admins.users', compact('users'));
+    }
+    public function add_user()
+    {
+        return view('adminpanel.admins.add_user');
+    }
+
+    public function save_user(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|unique:users,email',
+            'username' => 'required',
+            'password' => 'required|min:8',
+        ], [
+            'email.required' => 'The email field is required',
+            'username.required' => 'The username field is required',
+            'password.required' => 'The password field is required',
+        ]);
+
+        $this->user->email = $request->email;
+        $this->user->username = $request->username;
+
+        $this->user->slug = phpslug($request->username);
+        $this->user->password = Hash::make($request->password);
+        $this->user->role = '1';
+
+        $success = $this->user->save();
+
+        if ($success == true) {
+            toast('Successfully save!', 'success')->timerProgressBar()->width('400px');
+
+            return redirect()->route('users');
+        }
+
+    }
+
+    public function edit_user($id)
+    {
+        $current_user = $this->user::find($id);
+
+
+
+        return view('adminpanel.admins.edit_user', get_defined_vars());
+    }
+
+    public function update_admin(Request $request, $id)
+    {
+
+
+        $data = $this->user::find($id);
+
+        $data->username = $request->username;
+        $data->password = Hash::make($request->password);
+        $success = $data->update();
+
+        if ($success == true) {
+            toast('Successfully updated!', 'success')->timerProgressBar()->width('400px');
+
+            return redirect()->route('users');
+        }
+
+    }
+
+    public function delete_user($id)
+    {
+        if($id!=1){
+            $success = $this->user::find($id)->delete();
+
+            if ($success == true) {
+                toast('Successfully deleted!', 'success')->timerProgressBar()->width('400px');
+                return redirect()->route('users');
+            }
+        }
+        else{
+            toast('Super admin can'.'t be deleted!', 'danger')->timerProgressBar()->width('400px');
+                return redirect()->route('users');
+        }
+
+
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function earnings()
     {
         return view('adminpanel.user.earnings');
@@ -52,7 +142,7 @@ class usercontroller extends Controller
             // $offers=$this->offers::where('store_id',$store->id)->get();
             // dd($stores);
         }
-        return view('adminpanel.user.codes', compact('store', 'offers','date'));
+        return view('adminpanel.user.codes', compact('store', 'offers', 'date'));
 
     }
     public function view_codes(Request $request, $id, $type = null)
@@ -77,7 +167,7 @@ class usercontroller extends Controller
 
         } else {}
 
-        return view('adminpanel.user.view_codes', compact('feature', 'offers','date'));
+        return view('adminpanel.user.view_codes', compact('feature', 'offers', 'date'));
 
     }
 
@@ -131,14 +221,14 @@ class usercontroller extends Controller
 
     public function update_user(Request $request)
     {
-            $image='';
-            if($request->file('avatar')){
-                $image=logo_resize($request->file('avatar'));
-            }
-             $success = $this->user::whereId(auth()->user()->id)->update([
+        $image = '';
+        if ($request->file('avatar')) {
+            $image = logo_resize($request->file('avatar'));
+        }
+        $success = $this->user::whereId(auth()->user()->id)->update([
             'name' => $request->name,
             'username' => $request->username,
-             'avatar' => $image,
+            'avatar' => $image,
             'phone' => $request->phone,
         ]);
 
@@ -150,13 +240,12 @@ class usercontroller extends Controller
 
     public function track_store_ajaxcall(Request $request)
     {
-      //  dd($request->like);
+        //  dd($request->like);
         if ($request->like == 0) {
             $user = $this->user::find(Auth::user()->id);
-            $success = $user->stores()->syncWithoutDetaching([$user->id=>$request->id]);
+            $success = $user->stores()->syncWithoutDetaching([$user->id => $request->id]);
             return response()->json(['success' => 'success']);
-        }
-        else {
+        } else {
             $user = $this->user::find(Auth::user()->id);
             $success = $user->stores()->detach($request->id);
             return response()->json(['success' => 'success']);
@@ -166,13 +255,13 @@ class usercontroller extends Controller
     public function reffereduser($username)
     {
         Session::put('username', $username);
-        $sliders=slider::orderBy('id','desc')->get();
+        $sliders = slider::orderBy('id', 'desc')->get();
         $home_feature_category = Feature::where('location', 'Home-Page-Featured-Category')->orderBy('id', 'desc')->get();
         $home_feature_store = Feature::with('stores')->with('stores')->where('location', 'Home-Page-Featured-Store')->orderBy('id', 'desc')->get();
 
         $home_feature_deal = Feature::with('stores')->where('location', 'Home-Page-Top-Deals')->orderBy('id', 'desc')->take(4)->get();
 
-        return view('welcome', compact('home_feature_category', 'home_feature_store', 'home_feature_deal','sliders'));
+        return view('welcome', compact('home_feature_category', 'home_feature_store', 'home_feature_deal', 'sliders'));
     }
     public function welcome()
     {
@@ -187,9 +276,6 @@ class usercontroller extends Controller
     {
         $features = $this->feature::with('feature_offers')->where('is_active', 1)->where('location', $request->location)->get();
 
-
-
-
         return response()->json([
             'features' => json_encode($features),
 
@@ -197,13 +283,14 @@ class usercontroller extends Controller
 
     }
 
-    public function referrals(){
+    public function referrals()
+    {
 
-$referral=$this->referrals::where('user_id',Auth::user()->id)->pluck('referral_id');
+        $referral = $this->referrals::where('user_id', Auth::user()->id)->pluck('referral_id');
 
-$users=$this->user::whereIn('id', $referral)->get();
+        $users = $this->user::whereIn('id', $referral)->get();
 
-return view('adminpanel.user.referrals',compact('users'));
+        return view('adminpanel.user.referrals', compact('users'));
 
     }
 }

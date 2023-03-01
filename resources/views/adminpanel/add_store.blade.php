@@ -207,7 +207,7 @@
 
                                             <div class="col-md-4">
                                                 <label for="">Countries</label>
-                                                <select class="form-control  select2" name="country_id"
+                                                <select class="form-control  select2"  name="country_id"
                                                     style="width: 100%;">
 
                                                     @foreach ($all_country as $country)
@@ -219,15 +219,38 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="">Categories</label>
-                                                <select class="form-control  select2" name="category_id"
+                                                <select name="category_id" class="form-control  select2    @error('category_id') is-invalid @enderror" id="category_id" value="{{old('category_id')}}"
                                                     style="width: 100%;">
-
+                                                    <option></option>
                                                     @foreach ($all_category as $category)
                                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                                     @endforeach
                                                 </select>
+                                                @error('category_id')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
                                             </div>
+
                                         </div>
+
+                                        <div class=" mt-4" data-select2-id="64">
+                                            <div class="form-group" data-select2-id="63">
+                                              <label>Subcategory/optional</label>
+                                              <select id="get_subcategory" name="subcategory[]" class="select2 select2-hidden-accessible" multiple="" data-placeholder="Select a State" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
+
+
+
+                                              </select>
+                                            </div>
+
+
+                                          </div>
+
+
+
                                         <!--//row end here-->
                                         <div class=" mt-4">
                                             <div class="form-group mb-4">
@@ -482,8 +505,37 @@
 @endsection
 
 @section('js')
+{{-- <script src="{{asset('plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script> --}}
     <script>
+
+
+$('#category_id').on('change', function() {
+  var category_id=$(this).val();
+    $.ajax({
+                    url: "{{route('get_category_ajaxcall')}}",
+                    type: "post",
+                    data: {
+                        'category_id': category_id,
+                        '_token': '{{csrf_token()}}'
+                    },
+                    success: function (res) {
+                        $('#get_subcategory').empty();
+                        var subcategory= eval(res.subcategory);
+                        var option='';
+                        $.each(subcategory, function (key, value) {
+
+                                option+='<option  value="' + value.id + '">' + value.tags + '</option>';
+                                console.log(value.tags);
+                        });
+                        $('#get_subcategory').append(option);
+                    }
+                });
+});
+
+
+
         $(function() {
+            $('.duallistbox').bootstrapDualListbox()
             //Initialize Select2 Elements
             $('.select2').select2()
             $('.use_network').prop('checked', true);

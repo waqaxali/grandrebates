@@ -40,4 +40,23 @@ class customcontroller extends Controller
 
         return view('welcome',compact('home_feature_category','home_feature_store','home_feature_deal','sliders'));
     }
+
+
+
+
+    public function anywhere(){
+        return view('static.anywhere');
+    }
+    public function influencers(){
+        return view('static.influencers');
+    }
+    public function about(){
+        return view('static.about');
+    }
+    public function partners(){
+        return view('static.partners');
+    }
+    public function terms(){
+        return view('static.terms');
+    }
 }

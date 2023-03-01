@@ -64,7 +64,25 @@ if (!function_exists('all_store_options')) {
         return $options;
     }
 }
+if (!function_exists('all_category_options')) {
+    function all_category_options($selected_id = null)
+    {
+        $categories=App\Models\category::where('category_type','store')->orderBy('id', 'desc')->get();
+        $options='';
+        // $options .= '<option  value="empty">Select category</option>';
 
+        foreach($categories as $category){
+            $selected='';
+            if($selected_id==$category->id){
+                $selected='selected';
+            }
+
+            $options.='<option '.$selected.' value="'.$category->id.'">'.$category->name.'</option>';
+
+        }
+return $options;
+    }
+}
 if (!function_exists('random_time')) {
     function random_time()
     {
@@ -137,5 +155,13 @@ if (!function_exists('logo_resize')) {
         return $input['imagename'];
     }
 }
+if (!function_exists('save_stores')) {
+    function save_stores()
+    {
+        $save_stores=App\Models\users_store::where('user_id',Auth::user()->id)->pluck('store_id')->toArray();
+        return $save_stores;
+    }
+}
+
 
 

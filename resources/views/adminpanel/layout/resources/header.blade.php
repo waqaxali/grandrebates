@@ -7,7 +7,8 @@
 
     <head>
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>Grandebetes</title>
+        <title>Grandrebetes</title>
+        @stack('meta')
         <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, width=device-width">
 
         <script src="{{ asset('packs/js/application.js') }}"></script>
@@ -190,12 +191,12 @@
                                 </div>
                             </div>
 
-                            <a href="anywhere.html" class="anywhere" aria-label="Grandrebates Anywhere"
+                            <a href="{{route('anywhere')}}" class="anywhere" aria-label="Grandrebates Anywhere"
                                 title="Grandrebates Anywhere"><i><b>anywhere</b></i></a>
                             <a class="" href="{{ route('all_post') }}">Blog</a>
 
-                            <a class="" href="#">Influencers</a>
-                            <a class="" href="{{ route('subscription') }}">Packages</a>
+                            <a class="" href="{{route('influencers')}}">Influencers</a>
+                            {{-- <a class="" href="{{ route('subscription') }}">Packages</a> --}}
                             @if (Auth::check())
                                 <a class="top-bar-button" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
@@ -235,14 +236,14 @@
                                     class="brand-image " style="width:100px">
 
                             </a>
-                            <nav><a href="about.html">About</a>
-                                <a href="#">Blog</a>
-                                <a href="#">Stores</a>
-                                <a href="#">Partner</a>
-                                <a href="#">Privacy & Terms</a>
-                                <a href="#" data-open-chat>Help</a>
+                            <nav><a href="{{route('about')}}">About</a>
+                                <a href="{{route('all_post')}}">Blog</a>
+                                <a href="{{route('stores')}}">Stores</a>
+                                <a href="{{route('partners')}}">Partner</a>
+                                <a href="{{route('terms')}}">Privacy & Terms</a>
+                                {{-- <a href="#" data-open-chat>Help</a>
                                 <a href="#">Scholarship</a>
-                                <a href="#" target="_blank">Jobs</a>
+                                <a href="#" target="_blank">Jobs</a> --}}
                             </nav>
                         </div>
                     </div>
@@ -261,6 +262,7 @@
         <title>Grandebetes</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, width=device-width">
+        @stack('meta')
 
         <script src="{{ asset('packs/js/application.js') }}"></script>
         <link rel="stylesheet" media="screen" href="{{ asset('packs/css/application.css') }}" />
@@ -342,11 +344,11 @@
                                     style="font-size:22px"></i>&nbsp;&nbsp;&nbsp;&nbsp;Premium</a>
                         </nav>
                     </div>
-                    <div class="bottom">
+                    {{-- <div class="bottom">
                         <nav>
                             <a class="compact" href="#">Admin</a>
                         </nav>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
 
@@ -485,7 +487,7 @@
                                             @if (!empty(Auth::user()->avatar))
                                             <div class="avatar has-photo" style="background-image: url('{{asset('images/'.Auth::user()->avatar)}}')">
                                             @else
-                                            <div class="avatar has-photo" style="background-image: url('avatar/upload.png')">
+                                            <div class="avatar has-photo" style="background-image: url('{{asset('avatar/upload.png')}}')">
                                             @endif
 
 
@@ -541,14 +543,14 @@
             <div class="container">
                 <div class="left">
                     <a href="index.html" class=""></a>
-                    <nav><a href="about.html">About</a>
-                        <a href="#">Blog</a>
-                        <a href="#">Stores</a>
-                        <a href="#">Partner</a>
-                        <a href="#">Privacy & Terms</a>
-                        <a href="#" data-open-chat>Help</a>
+                    <nav><a href="{{route('about')}}">About</a>
+                        <a href="{{route('all_post')}}">Blog</a>
+                        <a href="{{route('stores')}}">Stores</a>
+                        <a href="{{route('partners')}}">Partner</a>
+                        <a href="{{route('terms')}}">Privacy & Terms</a>
+                        {{-- <a href="#" data-open-chat>Help</a>
                         <a href="#">Scholarship</a>
-                        <a href="#" target="_blank">Jobs</a>
+                        <a href="#" target="_blank">Jobs</a> --}}
                     </nav>
                 </div>
             </div>

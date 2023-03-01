@@ -27,7 +27,7 @@
         @if (!empty(Auth::user()->avatar))
         <div class="avatar has-photo" style="background-image: url('{{asset('images/'.Auth::user()->avatar)}}')">
         @else
-        <div class="avatar has-photo" style="background-image: url('avatar/upload.png')">
+        <div class="avatar has-photo" style="background-image: url('{{asset('avatar/upload.png')}}')">
         @endif
 
 
@@ -151,14 +151,14 @@
        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
            @csrf
        </form>
-        <a href="/about">About</a>
+        <a href="{{route('about')}}">About</a>
   <a href="{{route('all_post')}}">Blog</a>
-  <a href="#">Stores</a>
+  <a href="{{route('stores')}}">Stores</a>
   <a href="{{route('social_media_share')}}">Invite Friends</a>
-  <a href="#">Privacy &amp; Terms</a>
-  <a href="#" data-open-chat="">Help</a>
+  <a href="{{route('terms')}}">Privacy &amp; Terms</a>
+  {{-- <a href="#" data-open-chat="">Help</a>
   <a href="#">Scholarship</a>
-  <a href="#" target="_blank">Jobs</a>
+  <a href="#" target="_blank">Jobs</a> --}}
       </nav>
 
     </div>

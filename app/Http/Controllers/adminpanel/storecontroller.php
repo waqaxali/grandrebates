@@ -9,10 +9,13 @@ use App\Models\Country;
 use App\Models\Network;
 use App\Models\Offer;
 use App\Models\store;
+use App\Models\storesubcategory;
+use App\Models\subcategory;
 use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class storecontroller extends Controller
@@ -24,6 +27,7 @@ class storecontroller extends Controller
         $this->network = new Network;
         $this->category = new Category;
         $this->offers = new Offer;
+        $this->storesubcategory = new storesubcategory;
     }
 
     public function all_store(Request $request)
@@ -31,7 +35,6 @@ class storecontroller extends Controller
         $change_excel_button_route = 'change';
 
         $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-
 
             ->orderBy('id', 'DESC')
             ->get();
@@ -50,22 +53,23 @@ class storecontroller extends Controller
     }
     public function add_store(Request $request)
     {
-       // $date = Carbon::now();
+        // $date = Carbon::now();
         $all_category = $this->category::where('category_type', 'store')->get();
         $all_country = $this->country::all();
-
 
         return view('adminpanel.add_store', get_defined_vars());
     }
 
     public function save_store(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
 
             'store_name' => 'required|unique:stores,store_name',
+            'category_id' => 'required',
 
-        ],[
+        ], [
             'store_name.required' => 'The store name must be unique',
+            'category_id.required' => 'The category field is required',
         ]);
 
         $this->store->user_id = Auth::user()->id;
@@ -128,8 +132,24 @@ class storecontroller extends Controller
             $file->move(public_path('images'), $filename);
             $this->store->featured_image = $filename;
         }
-     //  dd ($request->network_type);
-       $success = $this->store->save();
+
+        $success = $this->store->save();
+
+        $store_id = $this->store->id;
+        if (isset($request->subcategory) && !empty($request->subcategory)) {
+            $save_data = [];
+            foreach ($request->subcategory as $tag) {
+                $save_data[] = [
+
+                    'category_id' => $request->category_id,
+                    'store_id' => $store_id,
+                    'subcategory_id' => $tag,
+                ];
+            }
+
+            $success = DB::table('storesubcategories')->insert($save_data);
+
+        }
 
         if ($success == true) {
             toast('Successfully save!', 'success')->timerProgressBar()->width('400px');
@@ -143,16 +163,23 @@ class storecontroller extends Controller
     }
     public function edit_store(Request $request, $slug, $store_name = null)
     {
-         $date = Carbon::now();
+        $date = Carbon::now();
         $all_category = $this->category::where('category_type', 'store')->get();
         $all_country = $this->country::all();
         $all_network = $this->network::all();
         $current_store = $this->store::where('slug', $slug)->first();
+
+        //start is used for to get selected value of subcategory
+        $subcategories = subcategory::where('category_id', $current_store->category_id)->get();
+        $storesubcategory_subcategory_id = $this->storesubcategory::where('store_id', $current_store->id)->pluck('subcategory_id')->toArray();
+        // end is used for to get selected value of subcategory
+
+
         if ($store_name == null) {
             return view('adminpanel.edit_store', get_defined_vars());
 
         } else {
-            return view('adminpanel.edit_store', compact('current_store', 'all_network', 'all_country', 'all_category', 'store_name'));
+            return view('adminpanel.edit_store', compact('current_store', 'all_network', 'all_country', 'all_category', 'store_name','subcategories','storesubcategory_subcategory_id','date'));
         }
 
     }
@@ -163,7 +190,7 @@ class storecontroller extends Controller
         $update = $this->store->where('slug', $slug)->first();
         $update->store_name = $request->store_name;
         $update->slug = phpslug($request->store_name);
-         $update->network_type = $request->network_type;
+        $update->network_type = $request->network_type;
         // $update->use_network = $request->use_network;
         // $update->use_skimlinks = $request->use_skimlinks;
         // $update->use_viglink = $request->use_viglink;
@@ -218,6 +245,24 @@ class storecontroller extends Controller
         }
         // dd($request);
         $success = $update->update();
+
+
+        $store_id =  $update->id;
+        $this->storesubcategory::where('store_id',$store_id)->delete();
+        if (isset($request->subcategory) && !empty($request->subcategory)) {
+            $save_data = [];
+            foreach ($request->subcategory as $tag) {
+                $save_data[] = [
+
+                    'category_id' => $request->category_id,
+                    'store_id' => $store_id,
+                    'subcategory_id' => $tag,
+                ];
+            }
+
+           $success = DB::table('storesubcategories')->insert($save_data);
+
+        }
         if ($success == true) {
 
             toast('Successfully update record!', 'success')->timerProgressBar()->width('400px');
@@ -243,6 +288,9 @@ class storecontroller extends Controller
 
     public function stores()
     {
+
+        // dd( $save_stores);
+
         $all_category = $this->category::where('category_type', 'store')->orderBy('id', 'DESC')->get();
         $all_store = $this->store::with('networks', 'categories')->where('status', config('constants.status.is_active'))->orderBy('id', 'DESC')->paginate(25);
         return view('adminpanel.user.stores', compact('all_store', 'all_category'));
@@ -257,40 +305,41 @@ class storecontroller extends Controller
 
     }
 
-    public function search_store(Request $request, ){
+    public function search_store(Request $request, )
+    {
         $where_clause = [];
 
         if ($request->missing_data != 'empty') {
 
             if ($request->missing_data == 'affliated_url') {
-                $where_clause[] = ['affliated_url', '=', NULL];
+                $where_clause[] = ['affliated_url', '=', null];
             } elseif ($request->missing_data == 'logo') {
-                $where_clause[] = ['logo', '=', NULL];
+                $where_clause[] = ['logo', '=', null];
             } elseif ($request->missing_data == 'homepage_url') {
-                $where_clause[] = ['homepage_url', '=', NULL];
+                $where_clause[] = ['homepage_url', '=', null];
             }
         }
 
-       // p($request->all());
+        // p($request->all());
 
         if ($request->network_type != '') {
 
-            $where_clause[] = ['network_type', '=',$request->network_type];
+            $where_clause[] = ['network_type', '=', $request->network_type];
         }
         if ($request->network_id > 0) {
-            $where_clause[] = ['network_id', '=',$request->network_id];
+            $where_clause[] = ['network_id', '=', $request->network_id];
         }
 
         //$is_active=['status', '=',1];
-        if ($request->status !='') {
-            $is_active = ['status', '=',$request->status];
-            $where_clause[]=$is_active;
+        if ($request->status != '') {
+            $is_active = ['status', '=', $request->status];
+            $where_clause[] = $is_active;
         }
 
 //p($where_clause); die;
-     $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
-        ->where($where_clause)
-        ->get();
+        $all_store = $this->store::with('networks', 'categories', 'countries', 'offers')
+            ->where($where_clause)
+            ->get();
 
         if ($request->hidden_excel_export == 'hidden_excel_export') {
 
@@ -305,9 +354,7 @@ class storecontroller extends Controller
 
         return view('adminpanel.all_store', get_defined_vars());
 
-
     }
-
 
     public function fileExport($stores)
     {
@@ -344,7 +391,7 @@ class storecontroller extends Controller
         // select('id','store_name','logo','use_network','use_skimlinks',
         // 'cashback_commission','network_cashback','network_commission','network_flat_switch','network_flat_rate','skimlinks_min','skimlinks_flat_rate')
         if (isset($store_name) && !empty($store_name)) {
-            $stores = store::select('id','store_name','logo')->with('offers')
+            $stores = store::select('id', 'store_name', 'logo')->with('offers')
                 ->where('store_name', 'LIKE', '%' . $store_name . '%')
                 ->where('status', config('constants.status.is_active'))
 
@@ -353,6 +400,12 @@ class storecontroller extends Controller
         }
 
         return response()->json(['stores' => $stores]);
+    }
+
+    public function get_category_ajaxcall(Request $request)
+    {
+        $subcategory = subcategory::where('category_id', $request->category_id)->get();
+        return response()->json(['subcategory' => $subcategory]);
     }
 
 }

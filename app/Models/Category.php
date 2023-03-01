@@ -40,4 +40,10 @@ class Category extends Model
     }
 
 
+    //relationship with subcategory
+    public function subcategories()
+    {
+        return $this->hasMany(subcategory::class, 'category_id', 'id');
+    }
+
 }

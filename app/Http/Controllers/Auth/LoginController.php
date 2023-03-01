@@ -83,12 +83,14 @@ public function handleGithubCallback()
 
 
     protected function _registerOrLoginUser($data){
+        $username = explode('@', $data->email);
         $user=User::where('email',$data->email)->first();
         if(!$user){
            // dd($data);
             $user=new User();
             $user->name=$data->name?$data->name:'';
             $user->email=$data->email;
+            $user->username=$username[0];
             $user->provider_id=$data->id;
             $user->role='2';
             $user->password=encrypt('1234');
