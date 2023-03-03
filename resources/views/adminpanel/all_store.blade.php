@@ -298,10 +298,10 @@
                                     <td>
                                         <ul class="list-inline">
                                             <li class="list-inline-item">
-                                                <img alt="Avatar" class="table-avatar"
-                                                    src="{{ asset('images/' . $store->logo) }}">
+                                                @if (isset($store->featured_image))
+                                                <img alt="Avatar" class="table-avatar" src="{{ asset('images/' . $store->featured_image) }}">
                                             </li>
-
+                                            @endif
                                         </ul>
                                     </td>
                                     <td>

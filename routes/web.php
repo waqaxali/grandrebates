@@ -76,7 +76,7 @@ Route::get('status', [PaypalController::class,'status'])->name('status');
 
 // working on user side
 Route::get('stores', [storecontroller::class,'stores'])->name('stores');
-Route::get('categories/{id?}', [categorycontroller::class,'categories'])->name('categories');
+Route::any('categories/{id?}', [categorycontroller::class,'categories'])->name('categories');
 //{type?} if an error occour
 Route::get('codes/{id?}', [usercontroller::class,'codes'])->name('codes');
 Route::get('view_codes/{id}/{type?}', [usercontroller::class,'view_codes'])->name('view_codes');
