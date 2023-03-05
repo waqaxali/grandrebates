@@ -7,6 +7,7 @@ use App\Models\Feature;
 use App\Models\Offer;
 use App\Models\referral;
 use App\Models\slider;
+use App\Models\users_store;
 use App\Models\store;
 use App\Models\User;
 use Auth;
@@ -24,6 +25,7 @@ class usercontroller extends Controller
         $this->feature = new Feature;
         $this->offers = new Offer;
         $this->referrals = new referral;
+        $this->users_stores = new users_store;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +49,7 @@ class usercontroller extends Controller
             'username' => 'required',
             'password' => 'required|min:8',
         ], [
-            'email.required' => 'The email field is required',
+            'email.required' => 'The email must be unique',
             'username.required' => 'The username field is required',
             'password.required' => 'The password field is required',
         ]);
@@ -124,11 +126,16 @@ class usercontroller extends Controller
     public function codes(Request $request, $id, $type = null)
     {
         $date = Carbon::now()->toDateString();
-
+        $save_store='';
         if ($type == null) {
             $store = $this->store::find($id);
             ///with offers find data
             $offers = $this->offers::where('store_id', $store->id)->get();
+            //get id to show faverout store on codes view
+            if( Auth::check()){
+           $save_store=$this->users_stores::select('id')->where('user_id',Auth::user()->id)->where('store_id',$id)->first('id');
+            }
+            // dd($save_store);
 
         }
         if ($type == 'category') {
@@ -142,11 +149,12 @@ class usercontroller extends Controller
             // $offers=$this->offers::where('store_id',$store->id)->get();
             // dd($stores);
         }
-        return view('adminpanel.user.codes', compact('store', 'offers', 'date'));
+        return view('adminpanel.user.codes', compact('store', 'offers', 'date','save_store'));
 
     }
     public function view_codes(Request $request, $id, $type = null)
     {
+        $save_store='';
         $date = Carbon::now()->toDateString();
         if ($type == 'feature_store') {
 
@@ -155,6 +163,10 @@ class usercontroller extends Controller
             $feature = $features[0];
 
             $offers = $this->offers::where('store_id', $feature->stores->id)->get();
+            if( Auth::check()){
+                $save_store=$this->users_stores::select('id')->where('user_id',Auth::user()->id)->where('store_id',$feature->stores->id)->first('id');
+            }
+
             //dd($dd);
         } elseif ($type == 'feature_deal') {
 
@@ -163,11 +175,14 @@ class usercontroller extends Controller
             $feature = $features[0];
 
             $offers = $this->offers::where('store_id', $feature->stores->id)->get();
-            // dd($dd);
+             //get id to show faverout store on codes view
+             if( Auth::check()){
+                $save_store=$this->users_stores::select('id')->where('user_id',Auth::user()->id)->where('store_id',$feature->stores->id)->first('id');
+            }
 
-        } else {}
+        }
 
-        return view('adminpanel.user.view_codes', compact('feature', 'offers', 'date'));
+        return view('adminpanel.user.view_codes', compact('feature', 'offers', 'date','save_store'));
 
     }
 

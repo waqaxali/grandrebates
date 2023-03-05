@@ -107,7 +107,7 @@ class PaypalController extends Controller
                 'subscription_date'=>get_date()->toDateString()
             )
        );
-       DB::table('users')->update(
+       DB::table('users')->where('id',Auth::user()->id)->update(
         array(
             'premium'=>'2',
             'subscription_date'=>get_date()->toDateString()

@@ -113,7 +113,7 @@
           <h2>invite friends &amp; earn forever</h2>
           <p>The more friends you invite, the more you’ll earn. Get up to 10% of every transaction that they earn for life.</p>
           <div class="buttons">
-            <a href="/invite" class="button white">Invite Now</a>
+            <a href="{{route('social_media_share')}}" class="button white">Invite Now</a>
           </div>
           <div class="people"></div>
         </div>

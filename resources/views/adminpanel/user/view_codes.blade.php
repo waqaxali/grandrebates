@@ -2,27 +2,24 @@
 @extends('adminpanel.layout.resources.header')
 
 @section('content')
-@push('meta')
+    @push('meta')
+        <meta property="og:custom_meta_title" content="{{ $feature->stores->custom_meta_title }}">
+        <meta property="og:custom_meta_description" content="{{ $feature->stores->custom_meta_description }}">
+    @endpush
 
-<meta property="og:custom_meta_title" content="{{$feature->stores->custom_meta_title}}">
-<meta property="og:custom_meta_description" content="{{$feature->stores->custom_meta_description}}">
+    <?php if (Auth::check()) {
+        if (Auth::user()->premium == config('constants.user.premium')) {
+            $cashback = cashback_calculate($feature->stores, true);
+        } else {
+            $cashback = cashback_calculate($feature->stores);
+        }
+    } else {
+        $cashback = cashback_calculate($feature->stores);
+    }
 
-@endpush
-
-<?php if(Auth::check()){
-    if (Auth::user()->premium == config('constants.user.premium'))
-        $cashback=cashback_calculate($feature->stores, true);
-        else
-        $cashback= cashback_calculate($feature->stores);
-}
-
-else
-$cashback= cashback_calculate($feature->stores);
-
-
-?>
+    ?>
     <div class="content-wrapper">
-        <div class="store-page-wrapper" data-controller="banner">
+        <div class="store-page-wrapper" data-controller="banner" style="display:list-item">
 
             <div class="store-header-wrapper">
                 <div class="container visible">
@@ -46,16 +43,16 @@ $cashback= cashback_calculate($feature->stores);
                             <div class="right">
                                 <h1>{{ $feature->title }} Coupons &amp; Promo Codes</h1>
                                 <div class="stats">
-                                    @if($cashback !='0')
-                                    <span class="stats-badge">
-                                        <span class="hide-on-small">
-                                            Coupons for
+                                    @if ($cashback != '0')
+                                        <span class="stats-badge">
+                                            <span class="hide-on-small">
+                                                Coupons for
+                                            </span>
+
+                                            {{ $cashback }}% Cash Back
+
+
                                         </span>
-
-                                        {{ $cashback }}% Cash Back
-
-
-                                    </span>
                                     @endif
                                     <span class="icon icon-calendar">
                                         <span class="hide-on-small">Updated: {{ $feature->stores->updated_at }}</span>
@@ -115,90 +112,134 @@ $cashback= cashback_calculate($feature->stores);
 
                 <div class="merchant-page-wrapper design-2022 narrow narrow " data-banner-target="pageContent">
                     <div class="store-page">
-                        @if ( $feature->stores->cashback_commission == config('constants.stores.commission') && empty($feature->stores->custom_cashback_title))
-                        <div class="notice store-notice mb-md hide-on-small has-cashback">
-                            <div class="icon bolt hide-on-small"></div>
-                            <div class="content">
-                                <div class="left">
-                                    <h6 class="nowrap">
-                                        <span>
-                                            <div class="icon bolt hide-on-medium"></div>
-                                            <span>Don’t miss out!</span>
-                                        </span>
 
-                                    </h6>
-                                    <p>You could combine these {{$feature->title }} coupon codes  with an extra {{ $cashback }}% in cash
-                                        back.<br>
+                        @if (Auth::check())
+                            @if ($feature->stores->cashback_commission == config('constants.stores.commission'))
+                                <div class="notice store-notice mb-md hide-on-small has-cashback">
+                                    <div class="icon bolt hide-on-small"></div>
+                                    <div class="content">
+                                        <div class="left">
 
-                                    </p>
+                                            <p>You are already getting {{ $cashback }}% cashback from
+                                                {{ $feature->title }}<br>
 
-                                </div>
-                                @if (!Auth::check())
-                                    <a href=""  target="_blank" class="button blue hide-on-small"data-fancybox="" onclick="pass_id_and_page_source({{$feature->stores->id}},'from_codes')"
-                                        data-src="#modal-sign-up">Activate</a>
-
-                                @endif
-
-                            </div>
-                            <!-- <div class="icon clear"></div> -->
-                        </div>
-
-                        @elseif (isset($feature->stores->custom_cashback_title) && $feature->stores->cashback_commission==config('constants.stores.commission'))
-
-                            <div class="notice store-notice mb-md hide-on-small has-cashback">
-                                <div class="icon bolt hide-on-small"></div>
-                                <div class="content">
-                                    <div class="left">
-                                        <h6 class="nowrap">
-                                            <span>
-                                                <div class="icon bolt hide-on-medium"></div>
-                                                <span>Don’t miss out!</span>
-                                            </span>
-
-                                        </h6>
-                                        <p>{{ $feature->stores->custom_cashback_title }}  with an extra {{$cashback}}% in cash back.<br>
-
-                                    </div>
-
-
-                                    @if (!Auth::check())
-                                            <a href="" target="_blank" class="button blue hide-on-small"data-fancybox="" data-src="#modal-sign-up" onclick="pass_id_and_page_source({{$feature->stores->id}},'from_codes')">Activate</a>
-
-                                    @endif
-                                </div>
-                                <!-- <div class="icon clear"></div> -->
-                            </div>
-                            @elseif (isset($feature->stores->custom_cashback_subtitle) && $feature->stores->cashback_commission!=config('constants.stores.commission'))
-                            <div class="notice store-notice mb-md hide-on-small no-cashback">
-                                <div class="content">
-                                    <div class="left">
-                                        <div class="flexcol">
-                                            <h6>{{ $feature->stores->custom_cashback_subtitle }}</h6>
+                                            </p>
 
                                         </div>
+
+
                                     </div>
-
+                                    <!-- <div class="icon clear"></div> -->
                                 </div>
-                                <!-- <div class="icon clear"></div> -->
-                            </div>
+                            @else
+                                <div class="notice store-notice mb-md hide-on-small no-cashback">
+                                    <div class="content">
+                                        <div class="left">
+                                            <div class="flexcol">
+                                                <h6>Sorry, looks like {{ $feature->title }} doesn’t allow cash back at this
+                                                    time!</h6>
+                                                <p>You can still use our verified {{ $feature->title }} coupon codes to
+                                                    save
+                                                    on your purchases.</p>
+                                            </div>
+                                        </div>
 
+                                    </div>
+                                    <!-- <div class="icon clear"></div> -->
+                                </div>
+                            @endif
                         @else
-                            <div class="notice store-notice mb-md hide-on-small no-cashback">
-                                <div class="content">
-                                    <div class="left">
-                                        <div class="flexcol">
-                                            <h6>Sorry, looks like {{ $feature->title }} doesn’t allow cash back at this
-                                                time!</h6>
-                                            <p>You can still use our verified {{ $feature->title }} coupon codes to save
-                                                on your purchases.</p>
+                            @if (
+                                $feature->stores->cashback_commission == config('constants.stores.commission') &&
+                                    empty($feature->stores->custom_cashback_title))
+                                <div class="notice store-notice mb-md hide-on-small has-cashback">
+                                    <div class="icon bolt hide-on-small"></div>
+                                    <div class="content">
+                                        <div class="left">
+                                            <h6 class="nowrap">
+                                                <span>
+                                                    <div class="icon bolt hide-on-medium"></div>
+                                                    <span>Don’t miss out!</span>
+                                                </span>
+
+                                            </h6>
+                                            <p>You could combine these {{ $feature->title }} coupon codes with an extra
+                                                {{ $cashback }}% in cash
+                                                back.<br>
+
+                                            </p>
+
                                         </div>
+
+                                        <a href="" target="_blank" class="button blue hide-on-small"data-fancybox=""
+                                            onclick="pass_id_and_page_source({{ $feature->stores->id }},'from_codes')"
+                                            data-src="#modal-sign-up">Activate</a>
+
+
+
                                     </div>
-
+                                    <!-- <div class="icon clear"></div> -->
                                 </div>
-                                <!-- <div class="icon clear"></div> -->
-                            </div>
-                        @endif
+                            @elseif (isset($feature->stores->custom_cashback_title) &&
+                                    $feature->stores->cashback_commission == config('constants.stores.commission'))
+                                <div class="notice store-notice mb-md hide-on-small has-cashback">
+                                    <div class="icon bolt hide-on-small"></div>
+                                    <div class="content">
+                                        <div class="left">
+                                            <h6 class="nowrap">
+                                                <span>
+                                                    <div class="icon bolt hide-on-medium"></div>
+                                                    <span>Don’t miss out!</span>
+                                                </span>
 
+                                            </h6>
+                                            <p>{{ $feature->stores->custom_cashback_title }} with an extra
+                                                {{ $cashback }}% in cash back.<br>
+
+                                        </div>
+
+
+
+                                        <a href="" target="_blank" class="button blue hide-on-small"data-fancybox=""
+                                            data-src="#modal-sign-up"
+                                            onclick="pass_id_and_page_source({{ $feature->stores->id }},'from_codes')">Activate</a>
+
+
+                                    </div>
+                                    <!-- <div class="icon clear"></div> -->
+                                </div>
+                            @elseif (isset($feature->stores->custom_cashback_subtitle) &&
+                                    $feature->stores->cashback_commission != config('constants.stores.commission'))
+                                <div class="notice store-notice mb-md hide-on-small no-cashback">
+                                    <div class="content">
+                                        <div class="left">
+                                            <div class="flexcol">
+                                                <h6>{{ $feature->stores->custom_cashback_subtitle }}</h6>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- <div class="icon clear"></div> -->
+                                </div>
+                            @else
+                                <div class="notice store-notice mb-md hide-on-small no-cashback">
+                                    <div class="content">
+                                        <div class="left">
+                                            <div class="flexcol">
+                                                <h6>Sorry, looks like {{ $feature->title }} doesn’t allow cash back at this
+                                                    time!</h6>
+                                                <p>You can still use our verified {{ $feature->title }} coupon codes to
+                                                    save
+                                                    on your purchases.</p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- <div class="icon clear"></div> -->
+                                </div>
+                            @endif
+                        @endif
 
 
 
@@ -217,123 +258,144 @@ $cashback= cashback_calculate($feature->stores);
                             </div>
                         </header>
                         <?php
-                        if($feature->stores->use_network==config('constants.stores.use_network'))
-
-                        $link=$feature->stores->homepage_url;
-                        if($feature->stores->use_skimlinks==config('constants.stores.use_skimlinks'))
-
-                        $link=$feature->stores->affliated_url;
+                        if ($feature->stores->use_network == config('constants.stores.use_network')) {
+                            $link = $feature->stores->homepage_url;
+                        }
+                        if ($feature->stores->use_skimlinks == config('constants.stores.use_skimlinks')) {
+                            $link = $feature->stores->affliated_url;
+                        }
                         ?>
 
 
                         <section class="offer-stripes">
                             <?php $count = 0; ?>
                             @foreach ($offers as $offer)
-                            @if($date<=$offer->end_date)
-                            <div  class="offer-stripe  tappable  ">
-                                <div class="right offer-stripe-main">
-                                    <div class="left">
-                                        <a href="{{$link}}" style="color:black">
-                                        <h3>
-                                            {{ $offer->title }}
-
-                                        </h3>
-                                    </a>
-
-                                        <p>{{ $offer->description }}
-
-                                        </p>
-
-                                        <div class="tags">
-                                            <span class="icon icon-verified">Verified</span>
-                                            <span class="icon icon-star">Exclusive</span>
-                                            <span>Used {{ random_time() }} times. Last used {{ random_days() }} day
-                                                ago.</span>
-
-                                            {{-- <span>Used 72 times. Last used 21 hours ago.</span> --}}
-                                        </div>
-                                    </div>
-                                    <div class="right">
-                                        <a href=""
-                                            onclick="fencybox_value('{{ $offer->code }}','{{ $offer->title }}')"
-                                            data-fancybox="" data-src="#offer" id="{{ $offer->id }}"
-                                            target="_blank" class="button nomar coupon hide-on-small"><span>Get
-                                                code</span></a>
-                                        <span class="hide-on-medium arrow-icon">
-                                        </span>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <?php $count++; ?>
-                                @if ($count == 1)
-                                    <div href="" class="offer-stripe  tappable  text-clipboard"
-                                        data-offer-id="2399098">
+                                @if ($date <= $offer->end_date)
+                                    <div class="offer-stripe  tappable  ">
                                         <div class="right offer-stripe-main">
                                             <div class="left">
-                                                <h3>
-                                                    15% off Extra Holidays Coupon
+                                                <a href="{{ $link }}" style="color:black">
+                                                    <h3>
+                                                        {{ $offer->title }}
 
-                                                </h3>
+                                                    </h3>
+                                                </a>
 
-                                                <p>Get 15% off bookings when you enter this Extra Holidays coupon code.</p>
+                                                <p>{{ $offer->description }}
+
+                                                </p>
 
                                                 <div class="tags">
+                                                    <span class="icon icon-verified">Verified</span>
                                                     <span class="icon icon-star">Exclusive</span>
-
                                                     <span>Used {{ random_time() }} times. Last used {{ random_days() }}
-                                                        hour ago.</span>
+                                                        day
+                                                        ago.</span>
+
+                                                    {{-- <span>Used 72 times. Last used 21 hours ago.</span> --}}
                                                 </div>
                                             </div>
-                                            @if (!Auth::check())
+                                            <div class="right">
+                                                <a href=""
+                                                    onclick="fencybox_value('{{ $offer->code }}','{{ $offer->title }}')"
+                                                    data-fancybox="" data-src="#offer" id="{{ $offer->id }}"
+                                                    target="_blank" class="button nomar coupon hide-on-small"><span>Get
+                                                        code</span></a>
+                                                <span class="hide-on-medium arrow-icon">
+                                                </span>
+                                            </div>
 
-                                                <div class="right">
-                                                    <a href="" class="button secondary bordered nomar hide-on-small"
-                                                        onclick="fencybox_value('','',{{$feature->stores->id}})" data-fancybox="" data-src="#offer"
-                                                        id="">Activate</a>
-                                                    <span class="hide-on-medium arrow-icon">
-                                                    </span>
-                                                </div>
-                                            @endif
                                         </div>
                                     </div>
+                                    <?php $count++; ?>
+                                    @if ($count == 1)
+                                        <div href="" class="offer-stripe  tappable  text-clipboard"
+                                            data-offer-id="2399098">
+                                            <div class="right offer-stripe-main">
+                                                <div class="left">
+                                                    <h3>
+                                                        15% off Extra Holidays Coupon
+
+                                                    </h3>
+
+                                                    <p>Get 15% off bookings when you enter this Extra Holidays coupon code.
+                                                    </p>
+
+                                                    <div class="tags">
+                                                        <span class="icon icon-star">Exclusive</span>
+
+                                                        <span>Used {{ random_time() }} times. Last used
+                                                            {{ random_days() }}
+                                                            hour ago.</span>
+                                                    </div>
+                                                </div>
+                                                @if (!Auth::check())
+                                                    <div class="right">
+                                                        <a href=""
+                                                            class="button secondary bordered nomar hide-on-small"
+                                                            onclick="fencybox_value('','',{{ $feature->stores->id }})"
+                                                            data-fancybox="" data-src="#offer"
+                                                            id="">Activate</a>
+                                                        <span class="hide-on-medium arrow-icon">
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
                                 @endif
-                            @endif
                             @endforeach
 
                             {{-- start premium offer --}}
 
-                            <div href="" class="offer-stripe  tappable  text-clipboard"
-                            data-offer-id="2399098">
-                            <div class="right offer-stripe-main">
-                                <div class="left">
-                                    <h3>
-                                        Grandrebates premium offers
+                            <div href="" class="offer-stripe  tappable  text-clipboard" data-offer-id="2399098">
+                                <div class="right offer-stripe-main">
+                                    <div class="left">
+                                        <h3>
+                                            Grandrebates premium offers
 
-                                    </h3>
+                                        </h3>
+                                        @if (Auth::check())
+                                            @if (Auth::user()->premium == config('constants.user.premium'))
+                                                <p>You already have a premium membership and enjoy a double cashback.</p>
+                                            @else
+                                                <p>Upgrade to Win more offers with double cashback & commission on each product.
+                                                </p>
+                                            @endif
+                                            @else
+                                            <p>Enter to Win more offers with double cashback & commission on each product.</p>
+                                        @endif
 
-                                    <p>Enter to Win more offers {{$cashback}} % cashback & commission.</p>
 
-                                    <div class="tags">
-                                        <span class="icon icon-star">Exclusive</span>
 
-                                        <span>Used {{ random_time() }} times. Last used {{ random_days() }}
-                                            hour ago.</span>
+                                        <div class="tags">
+                                            <span class="icon icon-star">Exclusive</span>
+
+                                            <span>Used {{ random_time() }} times. Last used {{ random_days() }}
+                                                hour ago.</span>
+                                        </div>
                                     </div>
+                                    @if (Auth::check())
+                                        @if (Auth::user()->premium != config('constants.user.premium'))
+                                            <div class="right">
+                                                <a href="{{ route('subscription') }}"
+                                                    class="button secondary bordered nomar hide-on-small">Upgrade</a>
+                                                <span class="hide-on-medium arrow-icon">
+                                                </span>
+                                            </div>
+                                        @endif
+                                    @else
+                                        <div class="right">
+                                            <a href="" class="button secondary bordered nomar hide-on-small"
+                                                onclick="fencybox_value('','',{{ $feature->stores->id }})"
+                                                data-fancybox="" data-src="#offer" id="">Activate</a>
+                                            <span class="hide-on-medium arrow-icon">
+                                            </span>
+                                        </div>
+                                    @endif
                                 </div>
-                                @if (!Auth::check())
-
-                                    <div class="right">
-                                        <a href="" class="button secondary bordered nomar hide-on-small"
-                                            onclick="fencybox_value('','',{{$feature->stores->id}})" data-fancybox="" data-src="#offer"
-                                            id="">Activate</a>
-                                        <span class="hide-on-medium arrow-icon">
-                                        </span>
-                                    </div>
-                                @endif
                             </div>
-                        </div>
-{{-- end premium offer --}}
+                            {{-- end premium offer --}}
 
                             @if ($feature->stores->show_amazon == '1')
                                 <div class="offers-tab-title-wrapper">
@@ -473,7 +535,7 @@ $cashback= cashback_calculate($feature->stores);
 
                     <article class="store-info mt-md row">
 
-                        <div class="row collapse ">
+                        <div class="row collapse " style="display: inline-flex">
                             <div class="col-md-6">
                                 <h2 class="square-card-title">{{ $feature->title }} Promo Codes FAQ </h2>
 
@@ -481,10 +543,12 @@ $cashback= cashback_calculate($feature->stores);
                                     <div class="faq-item">
                                         <p class="faq-title">🏷Where to Get Coupons for {{ $feature->title }}?</p>
                                         <p>Well, you are at the right place. You can find {{ $feature->title }} coupons at
-                                            Grandrebates.com. Make sure to check {{ $feature->title }}’s social media accounts
+                                            Grandrebates.com. Make sure to check {{ $feature->title }}’s social media
+                                            accounts
                                             as
                                             sometimes they offer exclusive coupons from these channels. However, you’ll most
-                                            likely find the same coupons across the web. Luckily, you are at Grandrebates so on
+                                            likely find the same coupons across the web. Luckily, you are at Grandrebates so
+                                            on
                                             top of saving with {{ $feature->title }} promo codes, you can also earn extra
                                             with
                                             {{ $feature->title }} cash back.</p>
@@ -514,17 +578,18 @@ $cashback= cashback_calculate($feature->stores);
                                 <h2 class="square-card-title">About {{ $feature->title }} Coupons</h2>
 
                                 <div class="square-card">
-                                    @if(isset($feature->stores->store_main_description) && ($feature->stores->show_store_description==1))
-                                    {{$feature->stores->store_main_description}}<br><br>
+                                    @if (isset($feature->stores->store_main_description) && $feature->stores->show_store_description == 1)
+                                        {{ $feature->stores->store_main_description }}<br><br>
                                     @endif
-                                    @if(isset($feature->stores->description_about_section) && $feature->stores->show_store_description==1)
-                                    {{$feature->stores->description_about_section}}<br><br>
+                                    @if (isset($feature->stores->description_about_section) && $feature->stores->show_store_description == 1)
+                                        {{ $feature->stores->description_about_section }}<br><br>
                                     @endif
 
-                                    @if ($feature->stores->show_store_description==null || $feature->stores->description_about_section=='')
+                                    @if ($feature->stores->show_store_description == null || $feature->stores->description_about_section == '')
                                         <p>Whether you are looking for the most up to date {{ $feature->title }} promo
                                             codes, you came to
-                                            the right place. Here at Grandrebates.com we work tirelessly to look for most up to
+                                            the right place. Here at Grandrebates.com we work tirelessly to look for most up
+                                            to
                                             date verified {{ $feature->title }} coupon codes. Today we have 5 active
                                             {{ $feature->title }} coupons
                                             at your disposal.</p>
@@ -552,6 +617,83 @@ $cashback= cashback_calculate($feature->stores);
 
 
                     </article>
+
+                    <div class="row">
+                        <h1 class="mt-3">Similar Stores</h1>
+
+                        <table class="store-table">
+                            <thead>
+                                <tr>
+                                    <th>Store</th>
+                                    <th>Cashback &amp; Commission</th>
+                                    <th>Avg. Earnings</th>
+                                    <th>Never miss another coupon code</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (get_subcategory($feature->stores->id) as $store)
+                                    <?php
+                                    if (Auth::check()) {
+                                        if (Auth::user()->premium == config('constants.user.premium')) {
+                                            $cashback = cashback_calculate($store, true);
+                                        } else {
+                                            $cashback = cashback_calculate($store);
+                                        }
+                                    } else {
+                                        $cashback = cashback_calculate($store);
+                                    }
+
+                                    ?>
+
+                                    <tr>
+                                        <td>
+                                            <a class="flex-row" href="{{ route('codes', $store->id) }}">
+                                                <div class="logo lazy-background visible"
+                                                    style="background-image: url('{{ asset('images/' . $store->logo) }}')">
+                                                </div>
+                                                {{ $store->store_name }}
+                                            </a>
+                                        </td>
+
+
+                                        <td>{{ $cashback }}% Cash Back</td>
+
+                                        <td>
+                                            -
+                                        </td>
+                                        @if (Auth::check())
+                                            <td>
+                                                <div class="switch-wrapper">
+                                                    <label class="label-switch" for="track_store_{{ $store->id }}">
+                                                        <input type="checkbox" class="track_store_true_or_false"
+                                                            name="track_Store" value="0"
+                                                            {{ in_array($store->id, save_stores()) ? 'checked' : '' }}
+                                                            id="track_store_{{ $store->id }}"
+                                                            data-store="{{ $store->id }}">
+                                                        <div class="checkbox"></div>
+                                                    </label> <label for="track_store_{{ $store->id }}"
+                                                        class="switch-text">Track
+                                                        store</label>
+                                                </div>
+                                            </td>
+                                        @else
+                                            <td>
+                                                <a href="user-sign-in" data-fancybox="" data-src="#modal-sign-up"
+                                                    data-source="category-page-track-store" data-store-subscribe="40081"
+                                                    class="switch-wrapper">
+                                                    <label class="label-switch" for="track_store_40081">
+                                                        <input type="checkbox" name="track_store_40081" id="track_store_40081">
+                                                        <div class="checkbox"></div>
+                                                    </label> <label for="track_store_40081" class="switch-text">Track
+                                                        store</label>
+                                                </a>
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -625,12 +767,20 @@ $cashback= cashback_calculate($feature->stores);
 
 
     <script>
+        var save_store_id='{{isset($save_store->id)}}';
         $(document).ready(function() {
+            if(save_store_id==''){
             $("#dislike").hide();
+            $("#like").show();
+        }else{
+            $("#dislike").show();
+            $("#like").hide();
+        }
+            // $("#dislike").hide();
             $("#model-hide").hide();
         });
 
-        function fencybox_value(code, title,store_id) {
+        function fencybox_value(code, title, store_id) {
 
 
 
@@ -642,7 +792,7 @@ $cashback= cashback_calculate($feature->stores);
                 $('#hide_input_section').hide();
             }
             if (store_id != '') {
-                pass_id_and_page_source(store_id,'from_code')
+                pass_id_and_page_source(store_id, 'from_code')
             }
 
         };
@@ -693,12 +843,59 @@ $cashback= cashback_calculate($feature->stores);
             });
         }
 
-        function pass_id_and_page_source(id,source) {
+        function pass_id_and_page_source(id, source) {
             console.log(id);
-//send value to modal
-$('#hidden_store_id').val(id);
-$('#hidden_from_codes').val(source);
+            //send value to modal
+            $('#hidden_store_id').val(id);
+            $('#hidden_from_codes').val(source);
         }
+
+
+
+
+        $(".track_store_true_or_false").on('change', function() {
+            var id = $(this).attr('data-store');
+            if ($(this).is(':checked')) {
+                var like = $(this).val();
+
+
+                $.ajax({
+                    url: "{{ route('track_store_ajaxcall') }}",
+                    type: "post",
+                    data: {
+                        'id': id,
+                        '_token': '{{ csrf_token() }}',
+                        'like': like,
+                    },
+
+                    success: function(res) {
+                        if (res.success) {
+                            console.log(res.success);
+
+                        }
+                    }
+                });
+            } else {
+                var z = $(this).val('1');
+                var like = $(this).val();
+                $.ajax({
+                    url: "{{ route('track_store_ajaxcall') }}",
+                    type: "post",
+                    data: {
+                        'id': id,
+                        '_token': '{{ csrf_token() }}',
+                        'like': like,
+                    },
+
+                    success: function(res) {
+                        if (res.success) {
+                            console.log(res.success);
+
+                        }
+                    }
+                });
+            }
+        });
     </script>
 
 @endsection

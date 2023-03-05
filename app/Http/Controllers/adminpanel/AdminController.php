@@ -38,6 +38,14 @@ class AdminController extends Controller
 
     public function register_user(Request $request)
     {
+        $req->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+
+        ], [
+            'email.required' => 'The email must be unique',
+            'password.required' => 'The password field is required',
+        ]);
         $username = explode('@', $request->email);
         $new_user = new User;
 

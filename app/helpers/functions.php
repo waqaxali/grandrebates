@@ -164,4 +164,17 @@ if (!function_exists('save_stores')) {
 }
 
 
+if (!function_exists('get_subcategory')) {
+    function get_subcategory($id)
+    {
+
+        $subcategory_id= App\Models\storesubcategory::where('store_id',$id)->pluck('subcategory_id')->toArray();
+        $store_id= App\Models\storesubcategory::whereIn('subcategory_id',$subcategory_id)->pluck('store_id')->toArray();
+
+            $stores=App\Models\store::whereIn('id',$store_id)->where('status',config('constants.status.is_active'))->get();
+        return $stores;
+    }
+}
+
+
 
