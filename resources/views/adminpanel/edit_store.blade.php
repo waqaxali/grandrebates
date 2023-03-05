@@ -1,6 +1,13 @@
 @extends('adminpanel.layout.main')
 
 @section('content')
+
+@push('meta')
+
+<meta property="og:custom_meta_title" content="{{$current_store->custom_meta_title}}">
+<meta property="og:custom_meta_description" content="{{$current_store->custom_meta_description}}">
+
+@endpush
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -11,14 +18,11 @@
                         <h1 class="m-0">Edit a Store
                         </h1>
                     </div><!-- /.col -->
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Edit a Store
-                                </a></li>
-                            <li class="breadcrumb-item active">Dashboard v1</li>
-                        </ol>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
+
+                </div>
+                <div class="row mb-1 ml-1 mt-3">
+                    <a href="{{route('all_store')}}" class="btn btn-success">Back to stores</a>
+                    </div>
             </div><!-- /.container-fluid -->
         </div>
 
@@ -242,7 +246,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
-                                                <select class="form-control  select2" name="category_id"
+                                                <select class="form-control  select2" name="category_id" id="category_id"
                                                     style="width: 100%;">
 
                                                     @foreach ($all_category as $category)
@@ -254,6 +258,23 @@
                                                 </select>
                                             </div>
                                         </div>
+
+
+                                        <div class=" mt-4" data-select2-id="64">
+                                            <div class="form-group" data-select2-id="63">
+                                              <label>Subcategory/optional</label>
+                                              <select id="get_subcategory" name="subcategory[]" class="select2 select2-hidden-accessible" multiple="" data-placeholder="Select a State" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
+                                            @foreach ($subcategories as $subcategory)
+                                                    <option  value="{{$subcategory->id}}" {{in_array($subcategory->id,$storesubcategory_subcategory_id)?'selected':''}}>{{$subcategory->tags}}</option>
+                                            @endforeach
+
+
+
+                                              </select>
+                                            </div>
+
+
+                                          </div>
                                         <!--//row end here-->
                                         <div class=" mt-4">
                                             <div class="form-group mb-4">
@@ -526,7 +547,14 @@
 @endsection
 
 @section('js')
+
+
+
+
     <script>
+
+
+
         var cashback_commission = '<?php echo $current_store->cashback_commission; ?>'
         var network_flat_switch = '<?php echo $current_store->network_flat_switch; ?>'
         // hide commission_section for checked value 0
@@ -546,6 +574,34 @@
 
 
         });
+
+
+
+$('#category_id').on('change', function() {
+  var category_id=$(this).val();
+
+    $.ajax({
+                    url: "{{route('get_category_ajaxcall')}}",
+                    type: "post",
+                    data: {
+                        'category_id': category_id,
+                        '_token': '{{csrf_token()}}'
+                    },
+
+                    success: function (res) {
+                        var subcategory= eval(res.subcategory);
+                        var option='';
+                        $('#get_subcategory').empty();
+                        $.each(subcategory, function (key, value) {
+
+                                option+='<option  value="' + value.id + '">' + value.tags + '</option>';
+                                console.log(value.tags);
+                        });
+                        $('#get_subcategory').append(option);
+                    }
+                });
+});
+
 
         $('.custom-file input').change(function(e) {
             if (e.target.files.length) {

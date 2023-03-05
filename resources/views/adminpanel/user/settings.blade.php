@@ -12,10 +12,14 @@
                     <div class="form-labels">
                         <label for="user_avatar">Your avatar</label>
                     </div>
-                    <label for="user_avatar" class="add-avatar"
-                       >
-                        <input type="file" name="user[avatar]" id="user_avatar">
+                    <label for="user_avatar" class="add-avatar" style="background-image: url('{{asset('images/'.Auth::user()->avatar)}}')" >
+                        {{-- <img class="" src="{{asset('images/'.Auth::user()->avatar)}}" alt=""> --}}
+                        <input type="file" name="avatar" id="user_avatar" value="{{Auth::user()->avatar}}">
+
                         <span class="hover">EDIT</span>
+                        @if (isset(Auth::user()->avatar))
+
+                        @endif
                     </label>
                 </div>
 
@@ -40,15 +44,15 @@
                     </div>
                 </div>
 
-                {{-- <div class="form-row">
+                <div class="form-row">
                     <div class="form-labels">
-                        <label for="user_last_name">Last name</label>
+                        <label for="user_last_name">User name</label>
                     </div>
                     <div class="form-inputs">
-                        <input class="large hollow expand" maxlength="50" size="50" type="text" value="Javed"
-                            name="user[last_name]" id="user_last_name">
+                        <input class="large hollow expand" maxlength="50" size="50" type="text" value="{{Auth::user()->username}}"
+                            name="username" >
                     </div>
-                </div> --}}
+                </div>
 
                 {{-- <div class="form-row col-on-small">
                     <div class="form-labels">
@@ -77,8 +81,8 @@
                         <input class="large hollow expand" required="required" type="email"
                             value="{{Auth::user()->email}}" name="user[email]" id="user_email">
 
-                        {{-- <p>Waiting for confirmation.</p>
-                        <p><a rel="nofollow" data-method="post"
+                        <p>Can't be changed.</p>
+                        {{-- <p><a rel="nofollow" data-method="post"
                                 href="/users/haiderjaved-866/resend_email_confirmation?locale=uk">Resend</a></p> --}}
 
                     </div>
@@ -89,13 +93,13 @@
                     </div>
                     <div class="form-inputs">
 
-                        <input class="large hollow expand" required="required" type="text"
+                        <input class="large hollow expand"  type="text"
                             value="{{Auth::user()->phone}}" name="phone" id="user_email">
 
                     </div>
                 </div>
 
-                <div class="form-row">
+                {{-- <div class="form-row">
                     <div class="form-labels">
                         <label for="user_paypal_email">PayPal Email</label>
                     </div>
@@ -104,7 +108,7 @@
                             id="user_paypal_email">
                         <p>Withdrawals will be sent to this PayPal account</p>
                     </div>
-                </div>
+                </div> --}}
 
                 {{-- <div class="form-row">
                     <div class="form-labels">

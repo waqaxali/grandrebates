@@ -10,19 +10,13 @@
                         <h1 class="m-0">Add New Slider</h1>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
+                <div class="row mb-1 ml-1 mt-3">
+                    <a href="{{route('sliders')}}" class="btn btn-success">Back to sliders</a>
+                    </div>
             </div><!-- /.container-fluid -->
         </div>
 
 
-        <div class="content-header">
-            <div class="container">
-                <div class="row mb-2 ml-1">
-                    <div class="col-md-3 ">
-                        <a href="{{route('sliders')}}" class="btn btn-success form-control">Back to sliders</a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="container">
             <div class="col-md-9">

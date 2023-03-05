@@ -32,9 +32,12 @@ class featuredcontroller extends Controller
     }
     public function save_featured(Request $request)
     {
-        $request->validate([
+        $this->validate($request,[
             'title'=>'required',
             'location'=>'required',
+            ],[
+                'title.required'=>'The title field is required',
+            'location.required'=>'The location field is required',
             ]);
         if ($request->location == 'Home-Page-Featured-Store') {
             $this->featured->featuredable_type = 'store';
@@ -45,7 +48,7 @@ class featuredcontroller extends Controller
         if ($request->location == 'Home-Page-Top-Deals') {
             $this->featured->featuredable_type = 'deal';
         }
-      
+
 
         $this->featured->location = $request->location;
         $this->featured->featureable_item_id = $request->featureable_item_id ? $request->featureable_item_id : '';
@@ -90,9 +93,9 @@ class featuredcontroller extends Controller
         if ($request->location == 'Home-Page-Top-Deals') {
             $this->featured->featuredable_type = 'deal';
         }
-        if ($request->location == 'Home-Page-Slider') {
-            $this->featured->featuredable_type = 'slider';
-        }
+        // if ($request->location == 'Home-Page-Slider') {
+        //     $this->featured->featuredable_type = 'slider';
+        // }
         $update = $this->featured::find($id);
         $update->location = $request->location;
 
@@ -132,12 +135,12 @@ class featuredcontroller extends Controller
             return response()->json($data);
         }
 
-        if ($request->select_type == 'Home-Page-Slider') {
+        // if ($request->select_type == 'Home-Page-Slider') {
 
-            $data = $this->store::select('id','store_name')->orderBy('id', 'desc')->where('status',config('constants.status.is_active'))->get();
+        //     $data = $this->store::select('id','store_name')->orderBy('id', 'desc')->where('status',config('constants.status.is_active'))->get();
 
-            return response()->json($data);
-        }
+        //     return response()->json($data);
+        // }
 
 
 

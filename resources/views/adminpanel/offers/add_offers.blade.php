@@ -16,6 +16,9 @@
                         </ol>
                     </div><!-- /.col --> --}}
                 </div><!-- /.row -->
+                <div class="row mb-1 ml-1 mt-3">
+                    <a href="{{route('all_offers')}}" class="btn btn-success">Back to offers</a>
+                    </div>
             </div><!-- /.container-fluid -->
         </div>
 
@@ -73,8 +76,13 @@
                                     <div class="form-group row">
                                         <label for="inputName" class="col-sm-12 col-form-label">Short title</label>
                                         <div class="col-sm-12">
-                                            <input type="text" name="short_title" class="form-control" id="inputName"
-                                                placeholder="e.g. 15%">
+                                            <input type="text" name="short_title" class="form-control  @error('short_title') is-invalid @enderror" id="inputName"
+                                            value="{{ old('short_title') }}" placeholder="e.g. 15%">
+                                            @error('short_title')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -91,13 +99,13 @@
                                     <div class="form-group row">
                                         <label for="inputName" class="col-sm-12 col-form-label">Description</label>
                                         <div class="col-sm-12">
-                                            <textarea name="description" class="form-control" id="inputName"></textarea>
+                                            <textarea name="description" class="form-control" id="inputName">{{ old('description') }}</textarea>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="inputName" class="col-sm-12 col-form-label">Imported description</label>
                                         <div class="col-sm-12">
-                                            <textarea name="imported_desciption" class="form-control" id="inputName"></textarea>
+                                            <textarea name="imported_desciption" class="form-control" id="inputName">{{ old('imported_desciption') }}</textarea>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -115,7 +123,7 @@
                                         <label for="inputName" class="col-sm-12 col-form-label">End date</label>
                                         <div class="col-sm-12">
                                             <input type="date" name="end_date" class="form-control  @error('end_date') is-invalid @enderror" id="inputName"
-                                                placeholder="e.g. Apparel"  value="{{ old('end_date') }}"></textarea>
+                                                placeholder="e.g. Apparel"  value="{{ old('end_date') }}">
                                                 @error('end_date')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}

@@ -12,6 +12,7 @@ use App\Http\Controllers\adminpanel\countrycontroller;
 use App\Http\Controllers\adminpanel\usercontroller;
 use App\Http\Controllers\adminpanel\networkcontroller;
 use App\Http\Controllers\adminpanel\slidercontroller;
+use App\Http\Controllers\adminpanel\subcategorycontroller;
 use App\Http\Controllers\customcontroller;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\SocialShareButtonsController;
@@ -49,12 +50,18 @@ Auth::routes();
 
 Route::get('/',  [App\Http\Controllers\customcontroller::class, 'welcome'])->name('welcome');
 
+Route::get('anywhere', [App\Http\Controllers\customcontroller::class, 'anywhere'])->name('anywhere');
+Route::get('influencers', [App\Http\Controllers\customcontroller::class, 'influencers'])->name('influencers');
+Route::get('about', [App\Http\Controllers\customcontroller::class, 'about'])->name('about');
+Route::get('terms', [App\Http\Controllers\customcontroller::class, 'terms'])->name('terms');
+Route::get('partners', [App\Http\Controllers\customcontroller::class, 'partners'])->name('partners');
 
 Route::get('/home', [App\Http\Controllers\customcontroller::class, 'index'])->name('home');
 Route::get('/user/home', [App\Http\Controllers\customcontroller::class, 'index'])->name('user/home');
 
 // Route::get('admin/login/', [AdminController::class,'login'])->name('admin.login');
 Route::post('auth/', [App\Http\Controllers\Auth\LoginController::class,'auth'])->name('auth');
+ Route::post('register_user', [AdminController::class,'register_user'])->name('register_user');
 Route::get('subscription', [AdminController::class, 'subscription'])->name('subscription');
 
 
@@ -69,7 +76,7 @@ Route::get('status', [PaypalController::class,'status'])->name('status');
 
 // working on user side
 Route::get('stores', [storecontroller::class,'stores'])->name('stores');
-Route::get('categories/{id?}', [categorycontroller::class,'categories'])->name('categories');
+Route::any('categories/{id?}', [categorycontroller::class,'categories'])->name('categories');
 //{type?} if an error occour
 Route::get('codes/{id?}', [usercontroller::class,'codes'])->name('codes');
 Route::get('view_codes/{id}/{type?}', [usercontroller::class,'view_codes'])->name('view_codes');
@@ -85,10 +92,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('update_store/{slug}', [storecontroller::class,'update_store'])->name('update_store');
         Route::post('delete_store/{slug}', [storecontroller::class,'delete_store'])->name('delete_store');
         Route::any('search_store', [storecontroller::class,'search_store'])->name('search_store');
-        Route::get('to_skimlinks', [storecontroller::class,'to_skimlinks'])->name('to_skimlinks');
-        Route::get('to_networks', [storecontroller::class,'to_networks'])->name('to_networks');
-        Route::get('fileExport', [storecontroller::class,'fileExport'])->name('fileExport');
-
+        Route::post('get_category_ajaxcall', [storecontroller::class,'get_category_ajaxcall'])->name('get_category_ajaxcall');
 
 
 
@@ -118,12 +122,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('delete_category/{id?}', [categorycontroller::class,'delete_category'])->name('delete_category');
         Route::post('track_store_category_ajaxcall', [categorycontroller::class,'track_store_category_ajaxcall'])->name('track_store_category_ajaxcall');
 
-
+        Route::get('posts', [postcontroller::class,'posts'])->name('posts');
         Route::get('add_post', [postcontroller::class,'add_post'])->name('add_post');
         Route::post('save_post', [postcontroller::class,'save_post'])->name('save_post');
         Route::get('edit_post/{id}', [postcontroller::class,'edit_post'])->name('edit_post');
         Route::post('update_post/{id}', [postcontroller::class,'update_post'])->name('update_post');
-        Route::get('delete_post/{id}', [postcontroller::class,'delete_post'])->name('delete_post');
+        Route::post('delete_post/{id}', [postcontroller::class,'delete_post'])->name('delete_post');
 
         Route::get('all_featured', [featuredcontroller::class,'all_featured'])->name('all_featured');
         Route::get('add_featured', [featuredcontroller::class,'add_featured'])->name('add_featured');
@@ -140,6 +144,15 @@ Route::middleware(['auth'])->group(function () {
         Route::post('update_slider/{id}', [slidercontroller::class,'update_slider'])->name('update_slider');
         Route::post('delete_slider/{id}', [slidercontroller::class,'delete_slider'])->name('delete_slider');
 
+
+        Route::get('subcategories', [subcategorycontroller::class,'subcategories'])->name('subcategories');
+        Route::get('add_subcategory', [subcategorycontroller::class,'add_subcategory'])->name('add_subcategory');
+        Route::post('save_subcategory', [subcategorycontroller::class,'save_subcategory'])->name('save_subcategory');
+        Route::get('edit_subcategory/{id?}', [subcategorycontroller::class,'edit_subcategory'])->name('edit_subcategory');
+        Route::post('update_subcategory/{id}', [subcategorycontroller::class,'update_subcategory'])->name('update_subcategory');
+        Route::post('delete_subcategory/{id}', [subcategorycontroller::class,'delete_subcategory'])->name('delete_subcategory');
+
+
         Route::get('all_offers/{slug?}', [offercontroller::class,'all_offers'])->name('all_offers');
         Route::get('add_offer/{store_slug?}', [offercontroller::class,'add_offer'])->name('add_offer');
          Route::post('save_offer', [offercontroller::class,'save_offer'])->name('save_offer');
@@ -152,7 +165,25 @@ Route::middleware(['auth'])->group(function () {
         Route::get('store_offers/{slug}/{relevent_offers?}', [offercontroller::class,'store_offers'])->name('store_offers');
 
 
+
+
+
+
+
+        Route::get('users', [usercontroller::class,'users'])->name('users');
+        Route::get('add_user', [usercontroller::class,'add_user'])->name('add_user');
+        Route::post('save_user', [usercontroller::class,'save_user'])->name('save_user');
+        Route::get('edit_user/{id?}', [usercontroller::class,'edit_user'])->name('edit_user');
+        Route::post('update_user/{id}', [usercontroller::class,'update_admin'])->name('update_admin');
+        Route::post('delete_user/{id}', [usercontroller::class,'delete_user'])->name('delete_user');
         /////////////////////user side working here /////////////////
+
+
+
+
+
+
+
         Route::get('earnings', [usercontroller::class,'earnings'])->name('earnings');
         Route::get('saves', [usercontroller::class,'saves'])->name('saves');
         Route::get('settings', [usercontroller::class,'settings'])->name('settings');

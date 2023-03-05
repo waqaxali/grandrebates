@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Index</title>
-
+  <title>Grandrebates</title>
+  @stack('meta')
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
@@ -26,6 +26,13 @@
   <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
   <!-- Theme Setting -->
   <link rel="stylesheet" href="{{asset('dist/css/setting.css')}}">
+
+
+
+  <link rel="stylesheet" href="{{asset('plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
+
+
+
 
 </head>
 
@@ -55,14 +62,16 @@
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Stores</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
               <li><a href="{{ route('all_store') }}" class="dropdown-item">All Stores</a></li>
-              <li><a href="{{ route('all_category') }}" class="dropdown-item">Stores Categories</a></li>
+
 			  <li><a href="{{ route('add_store') }}" class="dropdown-item">Add Store</a></li>
+              <li><a href="{{ route('all_category') }}" class="dropdown-item">Categories</a></li>
+              <li><a href="{{ route('subcategories') }}" class="dropdown-item">Sub Categories</a></li>
 		   </ul>
 		 </li>
          <li class="nav-item dropdown dropdown-hover">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Blog</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-              <li><a href="{{ route('all_post') }}" class="dropdown-item">All Posts</a></li>
+              <li><a href="{{ route('posts') }}" class="dropdown-item">Posts</a></li>
 
 			  <li><a href="{{ route('add_post') }}" class="dropdown-item">Add Post</a></li>
 		   </ul>
@@ -79,6 +88,7 @@
          <li class="nav-item"><a  href="{{route('countries')}}"  class="nav-link">Countries</a></li>
          <li class="nav-item"><a href="{{route('sliders')}}" class="nav-link">Sliders</a></li>
 		 <li class="nav-item"><a href="{{route('all_offers')}}" class="nav-link">Offers</a></li>
+		 <li class="nav-item"><a href="{{route('users')}}" class="nav-link">Admins</a></li>
 	</ul>
     </div>
 

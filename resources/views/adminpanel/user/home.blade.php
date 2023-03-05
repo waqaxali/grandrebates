@@ -37,13 +37,28 @@
                         </header>
                         <div class="slider homepage-slider slides-to-show-4">
                             @foreach ($home_feature_store as $feature)
+
+                            <?php
+                            if(Auth::check()){
+                                if (Auth::user()->premium == config('constants.user.premium'))
+                                    $cashback=cashback_calculate($feature->stores, true);
+                                    else
+                                    $cashback= cashback_calculate($feature->stores);
+                            }
+
+                            else
+                            $cashback= cashback_calculate($feature->stores);
+
+
+                            ?>
+
                             @if($feature->stores->status==config('constants.status.is_active'))
                                 <div class="slide-wrapper">
                                     <a href="{{ route('view_codes', [$feature->id, 'feature_store']) }}" class="slide-card">
                                         <picture class="image">
                                             <img src="{{ asset('images/' . $feature->image) }}" alt="Watchfinder">
                                         </picture>
-                                        <p>{{ cashback_calculate($feature->stores) }}% commission &amp; cash back</p>
+                                        <p>{{ $cashback }}% commission &amp; cash back</p>
                                     </a>
                                 </div>
                                 @endif
@@ -64,6 +79,23 @@
                         </header>
                         <div class="slider homepage-slider slides-to-show-4">
                             @foreach ($home_feature_deal as $feature_deal)
+
+
+
+
+                            <?php
+                            if(Auth::check()){
+                                if (Auth::user()->premium == config('constants.user.premium'))
+                                    $cashback=cashback_calculate($feature_deal->stores, true);
+                                    else
+                                    $cashback= cashback_calculate($feature_deal->stores);
+                            }
+
+                            else
+                            $cashback= cashback_calculate($feature_deal->stores);
+
+
+                            ?>
                             @if($feature_deal->stores->status==config('constants.status.is_active'))
                                 <div class="slide-wrapper">
                                     <a href="{{ route('view_codes', [$feature_deal->id, 'feature_deal']) }}"
@@ -71,7 +103,7 @@
                                         <picture class="image">
                                             <img src="{{ asset('images/' . $feature_deal->image) }}" alt="Watchfinder">
                                         </picture>
-                                        <p>{{ cashback_calculate($feature_deal->stores) }}% commission &amp; cash back</p>
+                                        <p>{{ $cashback }}% commission &amp; cash back</p>
                                     </a>
                                 </div>
                                 @endif

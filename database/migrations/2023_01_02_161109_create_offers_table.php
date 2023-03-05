@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->nullable();
             $table->string('kind');
-            $table->string('imported_desciption');
+            $table->string('imported_desciption')->nullable();
             $table->string('end_date');
             $table->string('code');
-            $table->string('description');
-            $table->string('short_title');
+            $table->string('description')->nullable();
+            $table->string('short_title')->nullable();
             $table->string('title');
             $table->string('store_id')->nullable();
             $table->string('is_active')->default(1);

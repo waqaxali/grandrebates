@@ -23,7 +23,15 @@
 
   <nav class="side-view-top-nav w-full ">
     <a href="#" class="user user-button-sidebar">
-      <div class="avatar has-photo"><div class="notification-badge" data-new-activity-badge="">1772</div>
+
+        @if (!empty(Auth::user()->avatar))
+        <div class="avatar has-photo" style="background-image: url('{{asset('images/'.Auth::user()->avatar)}}')">
+        @else
+        <div class="avatar has-photo" style="background-image: url('{{asset('avatar/upload.png')}}')">
+        @endif
+
+
+        <div class="notification-badge" data-new-activity-badge="">1772</div>
       </div>
       <div>
         <div class="username"></div>
@@ -105,7 +113,7 @@
           <h2>invite friends &amp; earn forever</h2>
           <p>The more friends you invite, the more you’ll earn. Get up to 10% of every transaction that they earn for life.</p>
           <div class="buttons">
-            <a href="/invite" class="button white">Invite Now</a>
+            <a href="{{route('social_media_share')}}" class="button white">Invite Now</a>
           </div>
           <div class="people"></div>
         </div>
@@ -143,14 +151,14 @@
        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
            @csrf
        </form>
-        <a href="/about">About</a>
+        <a href="{{route('about')}}">About</a>
   <a href="{{route('all_post')}}">Blog</a>
-  <a href="#">Stores</a>
+  <a href="{{route('stores')}}">Stores</a>
   <a href="{{route('social_media_share')}}">Invite Friends</a>
-  <a href="#">Privacy &amp; Terms</a>
-  <a href="#" data-open-chat="">Help</a>
+  <a href="{{route('terms')}}">Privacy &amp; Terms</a>
+  {{-- <a href="#" data-open-chat="">Help</a>
   <a href="#">Scholarship</a>
-  <a href="#" target="_blank">Jobs</a>
+  <a href="#" target="_blank">Jobs</a> --}}
       </nav>
 
     </div>

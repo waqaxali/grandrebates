@@ -10,7 +10,8 @@
                         <h1 class="m-0">Slider Listings <a href="{{ route('add_slider') }}"
                                 class="btn btn-inline btn-primary">Add New Slider</a></h1>
                     </div><!-- /.col -->
-                </div><!-- /.row -->
+                </div>
+              
             </div><!-- /.container-fluid -->
         </div>
 

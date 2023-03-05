@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Feature;
 use App\Models\Offer;
 use App\Models\store;
+use App\Models\subcategory;
+use App\Models\storesubcategory;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -19,6 +21,8 @@ class categorycontroller extends Controller
         $this->store = new store;
         $this->feature = new Feature;
         $this->offers = new Offer;
+        $this->subcategories = new subcategory;
+        $this->storesubcategories = new storesubcategory;
     }
     public function all_category()
     {
@@ -39,6 +43,13 @@ class categorycontroller extends Controller
     }
     public function save_category(Request $request)
     {
+        $this->validate($request,[
+            'name'=>'required',
+            // 'location'=>'required',
+            ],[
+                'name.required'=>'The name field is required',
+            // 'location.required'=>'The location field is required',
+            ]);
 
         $this->category->name = $request->name;
         $this->category->description = $request->description;
@@ -109,9 +120,10 @@ class categorycontroller extends Controller
         }
     }
 
-    public function categories($id)
+    public function categories(Request $request,$id)
     {
 
+        $stores='';
         $all_feature = $this->feature::whereHas('categories', function ($query) use ($id) {
             $query->where('id', $id);
         })->where('location', 'Home-Page-Featured-Category')->orderBy('id', 'desc')->take(3)->get();
@@ -120,10 +132,19 @@ class categorycontroller extends Controller
             $query->where('id', $id);
         })->where('status',config('constants.status.is_active'))->get();
 
-//         $count_category_offers = $this->category::select('id')->with('deployments')->get();
-// dd($count_category_offers);
+        $subcategories = $this->subcategories::where('category_id',$id)->get();
 
-        return view('adminpanel.user.categories', compact('stores', 'all_feature'));
+        if(isset($request->hidden_category_id)){
+
+
+          $store_id= storesubcategory::where('category_id',$request->hidden_category_id)->where('subcategory_id',$request->subcategory_id)->pluck('store_id')->toArray();
+
+            $stores=$this->store::whereIn('id',$store_id)->where('status',config('constants.status.is_active'))->get();
+             //dd($stores);
+        }
+
+
+        return view('adminpanel.user.categories', get_defined_vars());
     }
 
     public function track_store_category_ajaxcall(Request $request)

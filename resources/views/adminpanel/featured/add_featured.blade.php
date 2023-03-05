@@ -11,13 +11,11 @@
           <div class="col-sm-6">
             <h1 class="m-0">Add New Featured</h1>
           </div><!-- /.col -->
-          {{-- <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Add New Featured</a></li>
-              <li class="breadcrumb-item active">Dashboard v1</li>
-            </ol>
-          </div><!-- /.col --> --}}
-        </div><!-- /.row -->
+
+        </div>
+        <div class="row mb-1 ml-1 mt-3">
+            <a href="{{route('all_featured')}}" class="btn btn-success">Back to featured</a>
+            </div>
       </div><!-- /.container-fluid -->
     </div>
 
@@ -42,7 +40,7 @@
                                 <option value="Home-Page-Featured-Store">Home Page Featured Store</option>
                                 <option value="Home-Page-Featured-Category">Home Page Featured Category</option>
                                 <option value="Home-Page-Top-Deals">Home Page Top Deals</option>
-                                <option value="Home-Page-Slider">Home Page Slider</option>
+
 
 
 

@@ -1,6 +1,9 @@
 @extends('adminpanel.layout.resources.modals')
 @extends('adminpanel.layout.resources.header')
 @section('content')
+
+
+
     <div class="content-wrapper">
         <section class="padded" id="stores-page">
             <div class="container row">
@@ -71,6 +74,18 @@
                         <tbody>
                             @foreach ($all_store as $store)
 
+                           <?php if(Auth::check()){
+                                if (Auth::user()->premium == config('constants.user.premium'))
+                                    $cashback=cashback_calculate($store, true);
+                                    else
+                                    $cashback= cashback_calculate($store);
+                            }
+
+                            else
+                            $cashback= cashback_calculate($store);
+
+
+                            ?>
                                 <tr>
                                     <td>
                                         <a class="flex-row" href="{{ route('codes', $store->id) }}">
@@ -81,15 +96,18 @@
                                         </a>
                                     </td>
 
-                                        <td>{{cashback_calculate($store)}}% Cash Back</td>
+                                        <td>{{ $cashback }}% Cash Back</td>
+
+
 
                                     <td> — </td>
+
                                     @if (Auth::check())
                                         <td>
                                             <div class="switch-wrapper">
                                                 <label class="label-switch" for="track_store_{{ $store->id }}">
-                                                    <input type="checkbox" class="track_store_true_or_false"
-                                                        name="track_Store" value="0"
+                                                    <input type="checkbox"  class="track_store_true_or_false"
+                                                        name="track_Store" value="0" {{in_array($store->id,save_stores())  ? 'checked' : ''}}
                                                         id="track_store_{{ $store->id }}"
                                                         data-store="{{ $store->id }}">
                                                     <div class="checkbox"></div>

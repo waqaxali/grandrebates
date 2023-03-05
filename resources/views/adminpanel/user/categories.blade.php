@@ -52,11 +52,29 @@
                     </div>
 
 
-                    @if (count($stores) == 0)
-                        <p class="bg-danger text-white p-1">No store found</p>
-                    @else
-                        <h3>All {{ $stores[0]->categories->name }} Stores</h3>
-                    @endif
+                    <div class="row">
+                        <div class="col-sm-8 ">
+                            @if (count($stores) == 0)
+                                {{-- <p class="bg-danger text-white p-1">No store found</p> --}}
+                            @else
+                                <h3 style="float:left;margin-right:25px">All {{ $stores[0]->categories->name }} Stores</h3>
+                            @endif
+                            <form action="{{ route('categories', $id) }}" method="post">
+                                @csrf
+                                <input type="hidden" value="{{ $id }}" name="hidden_category_id">
+                                <select class="form-control select2" name="subcategory_id" id="status">
+                                    <option value="">Explore sub category</option>
+                                    @foreach ($subcategories as $subcategory)
+                                        <option value="{{ $subcategory->id }}" {{$subcategory->id==$request->subcategory_id?'selected':''}}>{{ $subcategory->tags }}</option>
+                                    @endforeach
+
+
+                                </select>
+                                <input type="submit" style="padding:5px" value="search">
+                            </form>
+
+                        </div>
+                    </div>
 
                     <table class="store-table">
                         <thead>
@@ -69,6 +87,18 @@
                         </thead>
                         <tbody>
                             @foreach ($stores as $store)
+                                <?php
+                                if (Auth::check()) {
+                                    if (Auth::user()->premium == config('constants.user.premium')) {
+                                        $cashback = cashback_calculate($store, true);
+                                    } else {
+                                        $cashback = cashback_calculate($store);
+                                    }
+                                } else {
+                                    $cashback = cashback_calculate($store);
+                                }
+
+                                ?>
 
                                 <tr>
                                     <td>
@@ -80,7 +110,9 @@
                                         </a>
                                     </td>
 
-                                    <td> {{ cashback_calculate($store) }} %</td>
+
+                                    <td>{{ $cashback }}% Cash Back</td>
+
                                     <td>
                                         -
                                     </td>
@@ -90,6 +122,7 @@
                                                 <label class="label-switch" for="track_store_{{ $store->id }}">
                                                     <input type="checkbox" class="track_store_true_or_false"
                                                         name="track_Store" value="0"
+                                                        {{ in_array($store->id, save_stores()) ? 'checked' : '' }}
                                                         id="track_store_{{ $store->id }}"
                                                         data-store="{{ $store->id }}">
                                                     <div class="checkbox"></div>
@@ -170,7 +203,4 @@
             }
         });
     </script>
-
-
-
 @endsection

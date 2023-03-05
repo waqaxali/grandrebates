@@ -25,6 +25,8 @@ class countrycontroller extends Controller
     {
         $request->validate([
                   'country_name'=>'required|unique:countries,country_name',
+                  ],[
+                    'country_name.required'=>'The country name must be unique',
                   ]);
 
                   $this->country->country_name=$request->country_name;

@@ -10,16 +10,12 @@
                     <div class="col-sm-6">
                         <h1 class="m-0">Adding a Store
                         </h1>
-                    </div><!-- /.col -->
-                    {{-- <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Adding a Store
-                                </a></li>
-                            <li class="breadcrumb-item active">Dashboard v1</li>
-                        </ol>
-                    </div><!-- /.col --> --}}
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
+                    </div>
+                </div>
+                <div class="row mb-2 ml-1">
+                <a href="{{route('all_store')}}" class="btn btn-success">Back to stores</a>
+                </div>
+            </div>
         </div>
 
         <!-- Main content -->
@@ -104,8 +100,8 @@
                                                                 <label for=""
                                                                     class="font-weight-normal">Cashback</label>
                                                                 <input type="number" name="network_cashback" min="0"
-                                                                    max="100" step="any" value="0.00"
-                                                                    class="form-control" placeholder="">
+                                                                    max="100" step="any"
+                                                                    class="form-control" placeholder="0.00"  value="{{ old('network_cashback') }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4" id="inr_c">
@@ -114,7 +110,7 @@
                                                                     class="font-weight-normal">Commission</label>
                                                                 <input type="number" name="network_commission"
                                                                     min="0" max="100" step="any"
-                                                                    value="0.00" class="form-control" placeholder="">
+                                                                     class="form-control" placeholder="0.00"  value="{{ old('network_commission') }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
@@ -122,9 +118,9 @@
                                                                 <label for="" class="font-weight-normal">Flat
                                                                     rate</label>
                                                                 <div class="custom-control custom-switch float-left">
-                                                                    <input type="checkbox" value="1"
+                                                                    <input type="checkbox"  placeholder="0.00"
                                                                         name="network_flat_switch"
-                                                                        class="custom-control-input" id="flat_rate">
+                                                                        class="custom-control-input" id="flat_rate"  value="1">
                                                                     <label class="custom-control-label ml-2"
                                                                         for="flat_rate"></label>
                                                                 </div>
@@ -136,7 +132,7 @@
                                                                     rate</label>
                                                                 <input type="number" name="network_flat_rate"
                                                                     min="0" max="100" step="any"
-                                                                    value="0.00" class="form-control" placeholder="">
+                                                                     class="form-control" placeholder="0.00" value="{{ old('network_flat_switch') }}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -150,8 +146,8 @@
                                                                 <label for="" class="font-weight-normal">Skimlinks
                                                                     min.</label>
                                                                 <input type="number" name="skimlinks_min" min="0"
-                                                                    max="100" step="any" value="0.00"
-                                                                    class="form-control" placeholder="">
+                                                                    max="100" step="any"
+                                                                    class="form-control" placeholder="0.00"value="{{ old('skimlinks_min') }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -159,8 +155,8 @@
                                                                 <label for="" class="font-weight-normal">Skimlinks
                                                                     max.</label>
                                                                 <input type="number" name="skimlinks_max" min="0"
-                                                                    max="100" step="any" value="0.00"
-                                                                    class="form-control" placeholder="">
+                                                                    max="100" step="any"
+                                                                    class="form-control" placeholder="0.00" value="{{ old('skimlinks_max') }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
@@ -211,7 +207,7 @@
 
                                             <div class="col-md-4">
                                                 <label for="">Countries</label>
-                                                <select class="form-control  select2" name="country_id"
+                                                <select class="form-control  select2"  name="country_id"
                                                     style="width: 100%;">
 
                                                     @foreach ($all_country as $country)
@@ -223,15 +219,38 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="">Categories</label>
-                                                <select class="form-control  select2" name="category_id"
+                                                <select name="category_id" class="form-control  select2    @error('category_id') is-invalid @enderror" id="category_id" value="{{old('category_id')}}"
                                                     style="width: 100%;">
-
+                                                    <option></option>
                                                     @foreach ($all_category as $category)
                                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                                     @endforeach
                                                 </select>
+                                                @error('category_id')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
                                             </div>
+
                                         </div>
+
+                                        <div class=" mt-4" data-select2-id="64">
+                                            <div class="form-group" data-select2-id="63">
+                                              <label>Subcategory/optional</label>
+                                              <select id="get_subcategory" name="subcategory[]" class="select2 select2-hidden-accessible" multiple="" data-placeholder="Select a State" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
+
+
+
+                                              </select>
+                                            </div>
+
+
+                                          </div>
+
+
+
                                         <!--//row end here-->
                                         <div class=" mt-4">
                                             <div class="form-group mb-4">
@@ -241,7 +260,7 @@
                                                         to store's website. It is required to generate a Skimlinks/VigLink
                                                         affiliate URL</small></p>
                                                 <input type="text" class="form-control" name="homepage_url"
-                                                    placeholder="—">
+                                                    placeholder="—"  value="{{ old('homepage_url') }}">
                                             </div>
                                             <div class="form-group mb-4" id="affliated_url">
                                                 <label for="" class="font-weight-normal mb-0">Affiliate
@@ -249,7 +268,7 @@
                                                 <p class="m-0 p-0"><small>This is used when monetized with a network. Not
                                                         used if monetized by Skimlinks or Viglink</small></p>
                                                 <input type="text" class="form-control" name="affliated_url"
-                                                    placeholder="—">
+                                                    placeholder="—"  value="{{ old('affliated_url') }}">
                                             </div>
                                             <div class="form-group mb-4">
                                                 <div class="custom-control custom-switch mb-1">
@@ -261,28 +280,28 @@
                                                 </div>
                                                 <label for="" class="font-weight-normal">Additional description
                                                     (above the main description)</label>
-                                                <textarea class="form-control" name="store_main_description" cols="4" placeholder="Enter ..."></textarea>
+                                                <textarea class="form-control" name="store_main_description" cols="4" placeholder="Enter ...">{{ old('store_main_description') }}</textarea>
                                             </div>
                                             <div class="form-group mb-4">
 
                                                 <label for="" class="font-weight-normal">Main description (about
                                                     section)</label>
                                                 <textarea class="form-control" name="description_about_section" cols="4"
-                                                    placeholder="Will auto-generate if blank"></textarea>
+                                                    placeholder="Will auto-generate if blank">{{ old('description_about_section') }}</textarea>
                                             </div>
                                             <div class="form-group mb-4">
 
                                                 <label for="" class="font-weight-normal">Custom no cashback
                                                     title</label>
                                                 <textarea class="form-control" cols="4" name="custom_cashback_title"
-                                                    placeholder="Sorry, looks like  doesn’t allow cash back at this time!"></textarea>
+                                                    placeholder="Sorry, looks like  doesn’t allow cash back at this time!">{{ old('custom_cashback_title') }}</textarea>
                                             </div>
                                             <div class="form-group mb-4">
 
                                                 <label for="" class="font-weight-normal">Custom no cashback
                                                     subtitle</label>
                                                 <textarea class="form-control" name="custom_cashback_subtitle" cols="4"
-                                                    placeholder="You can still use our verified  coupon codes to save on your purchases."></textarea>
+                                                    placeholder="You can still use our verified  coupon codes to save on your purchases.">{{ old('custom_cashback_subtitle') }}</textarea>
                                             </div>
 
                                             <div class="form-group mb-4">
@@ -290,7 +309,7 @@
                                                 <label for="" class="font-weight-normal">Custom no commission
                                                     subtitle</label>
                                                 <textarea class="form-control" name="custom_commission_subtitle" cols="4"
-                                                    placeholder="You can still save & share  with your friends & followers."></textarea>
+                                                    placeholder="You can still save & share  with your friends & followers.">{{ old('custom_commission_subtitle') }}</textarea>
                                             </div>
 
                                             <div class="form-group mb-4">
@@ -298,7 +317,7 @@
                                                 <label for="" class="font-weight-normal">Custom no commission
                                                     title</label>
                                                 <textarea class="form-control" name="custom_commission_title" cols="4"
-                                                    placeholder="Sorry, looks like  doesn’t allow commission at this time!"></textarea>
+                                                    placeholder="Sorry, looks like  doesn’t allow commission at this time!">{{ old('custom_commission_title') }}</textarea>
                                             </div>
                                             <div class="form-group row">
                                                 <label for="inputEmail" class="col-sm-12 col-form-label">Logo</label>
@@ -307,7 +326,7 @@
                                                         <div class="custom-file">
                                                             <input type="file" class="custom-file-input"
                                                                 name="logo" onchange="readURL1(this);"
-                                                                id="exampleInputFile">
+                                                                id="exampleInputFile" >
                                                             <label class="custom-file-label" for="exampleInputFile">Choose
                                                                 file</label>
                                                         </div>
@@ -398,29 +417,29 @@
                                             <label for="exampleInputEmail1" class="font-weight-normal">Instagram
                                                 URL</label>
                                             <input type="text" class="form-control" name="instagram_url"
-                                                placeholder=" Enter Instagram URL">
+                                                placeholder=" Enter Instagram URL" value="{{ old('instagram_url') }}">
                                         </div><!-- /.form-group -->
                                         <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-normal">Pinterest
                                                 URL</label>
                                             <input type="text" class="form-control" name="pinterest_url"
-                                                placeholder="Enter Pinterest URL">
+                                                placeholder="Enter Pinterest URL" value="{{ old('pinterest_url') }}">
                                         </div><!-- /.form-group -->
                                         <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-normal">Youtube URL</label>
                                             <input type="text" class="form-control" name="youtube_url"
-                                                placeholder="Enter Youtube URL">
+                                                placeholder="Enter Youtube URL" value="{{ old('youtube_url') }}">
                                         </div><!-- /.form-group -->
                                         <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-normal">Facebook
                                                 URL</label>
                                             <input type="text" class="form-control" name="facebook_url"
-                                                placeholder="Enter Facebook URL">
+                                                placeholder="Enter Facebook URL" value="{{ old('facebook_url') }}">
                                         </div><!-- /.form-group -->
                                         <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-normal">Twitter URL</label>
                                             <input type="text" class="form-control" name="twitter_url"
-                                                placeholder="Enter Twitter URL">
+                                                placeholder="Enter Twitter URL" value="{{ old('twitter_url') }}">
                                         </div><!-- /.form-group -->
 
                                     </div><!-- /.tab-pane -->
@@ -429,14 +448,14 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-normal">Custom h1</label>
                                             <input type="text" class="form-control" name="custom_h1"
-                                                placeholder="Coupons and Promo Codes">
+                                                placeholder="Coupons and Promo Codes" value="{{ old('custom_h1') }}">
                                         </div><!-- /.form-group -->
                                         <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-normal mb-0">Slug
                                                 suffix</label>
                                             <p class="p-0 m-0"><small>Appends a suffix to the URL</small></p>
                                             <input type="text" class="form-control" name="slug_suffix"
-                                                placeholder="promo-codes">
+                                                placeholder="promo-codes" value="{{ old('slug_suffix') }}">
                                         </div><!-- /.form-group -->
                                         {{-- <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-normal">Referral
@@ -453,13 +472,13 @@
                                                 </small><br>Custom meta title</p>
                                                 {{-- {{dd(date()->year);}} --}}
                                             <input type="text" name="custom_meta_title" class="form-control"
-                                                placeholder="25% off  Coupons, Promo Codes - {{get_date()->year}}, ">
+                                                placeholder="25% off  Coupons, Promo Codes - {{get_date()->year}}, " value="{{ old('custom_meta_title') }}">
                                         </div><!-- /.form-group -->
                                         <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-normal">Custom meta
                                                 description</label>
                                             <textarea class="form-control" cols="4" name="custom_meta_description"
-                                                placeholder=" Coupons for {{get_date()->year}}, . Choose from 0 active  promo codes & coupons.  Promo Codes verified on {{get_date()->toFormattedDateString()}} ."></textarea>
+                                                placeholder=" Coupons for {{get_date()->year}}, . Choose from 0 active  promo codes & coupons.  Promo Codes verified on {{get_date()->toFormattedDateString()}} .">{{ old('custom_meta_description') }}</textarea>
                                         </div><!-- /.form-group -->
                                     </div><!-- /.tab-pane -->
 
@@ -486,8 +505,37 @@
 @endsection
 
 @section('js')
+{{-- <script src="{{asset('plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script> --}}
     <script>
+
+
+$('#category_id').on('change', function() {
+  var category_id=$(this).val();
+    $.ajax({
+                    url: "{{route('get_category_ajaxcall')}}",
+                    type: "post",
+                    data: {
+                        'category_id': category_id,
+                        '_token': '{{csrf_token()}}'
+                    },
+                    success: function (res) {
+                        $('#get_subcategory').empty();
+                        var subcategory= eval(res.subcategory);
+                        var option='';
+                        $.each(subcategory, function (key, value) {
+
+                                option+='<option  value="' + value.id + '">' + value.tags + '</option>';
+                                console.log(value.tags);
+                        });
+                        $('#get_subcategory').append(option);
+                    }
+                });
+});
+
+
+
         $(function() {
+            $('.duallistbox').bootstrapDualListbox()
             //Initialize Select2 Elements
             $('.select2').select2()
             $('.use_network').prop('checked', true);

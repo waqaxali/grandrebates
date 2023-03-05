@@ -204,6 +204,7 @@ return [
         Srmklive\PayPal\Providers\PayPalServiceProvider::class,
         Jorenvh\Share\Providers\ShareServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class
     ],
 
     /*
@@ -224,6 +225,8 @@ return [
         'Share' => Jorenvh\Share\ShareFacade::class,
         'Carbon' => Carbon\Carbon::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Image' => Intervention\Image\Facades\Image::class
+
 
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),

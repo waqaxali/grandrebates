@@ -33,9 +33,12 @@
                             <p>10 Free Optimization</p>
                             <p>24/7 Support</p>
                         </div>
+                        @if (Auth::user()->premium!=config('constants.user.premium'))
                         <div class="btn">
                             <input type ="submit" value="Buy Now"class="readon">
                         </div>
+                        @endif
+
                     </div>
                 </form>
                 </div>
