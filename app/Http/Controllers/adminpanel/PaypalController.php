@@ -21,7 +21,7 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\ExecutePayment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Api\Transaction;
-use App\Models\Store;
+use App\Models\store;
 use Illuminate\Support\Facades\DB;
 
 use Auth;
@@ -31,7 +31,7 @@ class PaypalController extends Controller
 
     public function __construct()
     {
-        $this->store=new Store;
+        $this->store=new store;
 
         $paypal_configuration = \Config::get('paypal');
         $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal_configuration['client_id'], $paypal_configuration['secret']));
@@ -103,9 +103,16 @@ class PaypalController extends Controller
             array(
                 'amount' => $request->amount,
                 'payment_id'=>$payment->getId(),
-                'user_id'=>Auth::user()->id
+                'user_id'=>Auth::user()->id,
+                'subscription_date'=>get_date()->toDateString()
             )
        );
+       DB::table('users')->where('id',Auth::user()->id)->update(
+        array(
+            'premium'=>'2',
+            'subscription_date'=>get_date()->toDateString()
+        )
+   );
 
         Session::put('paypal_payment_id', $payment->getId());
 
